@@ -1,16 +1,12 @@
-# music_vocabulary
+# Musical_Vocabulary
 
-An app which is meant as an exploratory exercise for dart, flutter and music theory
+This mini project was meant to let me explore dart and flutter while also learning a bit of music theory.
 
-## Getting Started
+## The idea
 
-This project is a starting point for a Flutter application.
+I'm a guitarist but i don't know much about music theory. So the idea is to have a simple app that i can interrogate when i want to know the notes in a scale or in a chord.
+So, the main page lets me decide if i want to lookup scales or chords, and the second page lets me pick the root note of the scale or chord. The result is a page displaying a set of scales or chords that have the choosen note as root.
 
-A few resources to get you started if this is your first Flutter project:
+Screenshot of the app in action:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot_music_vocabulary](https://user-images.githubusercontent.com/26527575/91875557-ea0bdd00-ec7b-11ea-955c-16d185ae3e99.png)
