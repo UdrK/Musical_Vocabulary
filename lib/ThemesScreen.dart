@@ -139,14 +139,17 @@ class _ThemesScreen extends State<ThemesScreen> {
           Material(
             color: Theme.of(context).cardColor,
             child: ListTile(
-              title: Text(
-                "Font color",
-                style: TextStyle(
-                  fontSize: Theme.of(context).textTheme.headline5.fontSize,
-                  fontWeight: Theme.of(context).textTheme.headline5.fontWeight,
-                  fontStyle: Theme.of(context).textTheme.headline5.fontStyle,
-                  color: font_color
-                ),
+              title: Row(
+                children: [
+                  Text(
+                    "Font color ",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Icon(
+                    Icons.circle,
+                    color: font_color,
+                  ),
+                ],
               ),
               onTap: () { _showColorDialog('font'); },
             ),
@@ -154,14 +157,17 @@ class _ThemesScreen extends State<ThemesScreen> {
           Material(
             color: Theme.of(context).cardColor,
             child: ListTile(
-              title: Text(
-                "Primary color",
-                style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline5.fontSize,
-                    fontWeight: Theme.of(context).textTheme.headline5.fontWeight,
-                    fontStyle: Theme.of(context).textTheme.headline5.fontStyle,
-                    color: primary_color
-                ),
+              title: Row(
+                children: [
+                  Text(
+                    "Primary color ",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Icon(
+                    Icons.circle,
+                    color: primary_color,
+                  ),
+                ],
               ),
               onTap: () { _showColorDialog('primary'); },
             ),
@@ -169,14 +175,17 @@ class _ThemesScreen extends State<ThemesScreen> {
           Material(
             color: Theme.of(context).cardColor,
             child: ListTile(
-              title: Text(
-                "Button color",
-                style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline5.fontSize,
-                    fontWeight: Theme.of(context).textTheme.headline5.fontWeight,
-                    fontStyle: Theme.of(context).textTheme.headline5.fontStyle,
-                    color: button_color
-                ),
+              title: Row(
+                children: [
+                  Text(
+                    "Button color ",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Icon(
+                    Icons.circle,
+                    color: button_color,
+                  ),
+                ],
               ),
               onTap: () { _showColorDialog('button'); },
             ),
@@ -184,14 +193,17 @@ class _ThemesScreen extends State<ThemesScreen> {
           Material(
             color: Theme.of(context).cardColor,
             child: ListTile(
-              title: Text(
-                "Background color",
-                style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline5.fontSize,
-                    fontWeight: Theme.of(context).textTheme.headline5.fontWeight,
-                    fontStyle: Theme.of(context).textTheme.headline5.fontStyle,
-                    color: background_color
-                ),
+              title: Row(
+                children: [
+                  Text(
+                    "Background color ",
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Icon(
+                    Icons.circle,
+                    color: background_color,
+                  ),
+                ],
               ),
               onTap: () { _showColorDialog('background'); },
             ),

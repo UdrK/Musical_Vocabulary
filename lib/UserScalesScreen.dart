@@ -169,7 +169,7 @@ class UserScalesScreen extends StatelessWidget {
                           children: [
                             IconButton(
                               icon: Icon(Icons.delete_forever),
-                              tooltip: 'Save to favorites',
+                              tooltip: 'Delete',
                               onPressed: () {
                                 // TODO: Save to favorites
                               },
