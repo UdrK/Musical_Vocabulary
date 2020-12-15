@@ -1,24 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:musical_vocabulary/LoadingScreen.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'Home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemesScreen extends StatefulWidget {
+
   @override
   _ThemesScreen createState() => _ThemesScreen();
 }
 
 class _ThemesScreen extends State<ThemesScreen> {
 
-  String choosen_theme = 'dark';
+  String choosen_theme;
   int font_size = 20;
   Color font_color = Colors.white;
   Color background_color = Colors.white;
   Color button_color = Colors.white;
   Color primary_color = Colors.white;
 
+  bool done = false;
 
-  ThemesScreen() {}
+  Future<bool> loadSettings() async {
+    await SharedPreferences.getInstance().then((value) { choosen_theme = value.getString('default_theme');});
+    await SharedPreferences.getInstance().then((value) { font_size = value.getInt('custom_font_size');});
+    await SharedPreferences.getInstance().then((value) { font_color = Color(value.getInt('custom_font_color'));});
+    await SharedPreferences.getInstance().then((value) { background_color = Color(value.getInt('custom_background'));});
+    await SharedPreferences.getInstance().then((value) { button_color = Color(value.getInt('custom_card'));});
+    await SharedPreferences.getInstance().then((value) { primary_color = Color(value.getInt('custom_primary'));});
+    return true;
+  }
+
+  @override
+  void initState() {
+    loadSettings().then((value) {
+      setState(() {
+        done = value;
+      });
+    });
+  }
 
   @override
   State<StatefulWidget> createState() {}
@@ -38,6 +58,8 @@ class _ThemesScreen extends State<ThemesScreen> {
     ).then((int value) {
       if (value != null) {
         setState(() => font_size = value);
+        final prefs = SharedPreferences.getInstance();
+        prefs.then((value) => value.setInt('custom_font_size', font_size));
       }
     });
   }
@@ -54,14 +76,26 @@ class _ThemesScreen extends State<ThemesScreen> {
             child: MaterialPicker(
               pickerColor: primary_color,
               onColorChanged: (Color color) {
-                if (whichColor == 'font')
-                  setState(()=>font_color=color);
-                else if (whichColor == 'background')
-                  setState(()=>background_color=color);
-                else if (whichColor == 'button')
-                  setState(()=>button_color=color);
-                else if (whichColor == 'primary')
-                  setState(()=>primary_color=color);
+                if (whichColor == 'font') {
+                  setState(() => font_color = color);
+                  final prefs = SharedPreferences.getInstance();
+                  prefs.then((value) => value.setInt('custom_font_color', font_color.value));
+                }
+                else if (whichColor == 'background') {
+                  setState(() => background_color = color);
+                  final prefs = SharedPreferences.getInstance();
+                  prefs.then((value) => value.setInt('custom_background', background_color.value));
+                }
+                else if (whichColor == 'button') {
+                  setState(() => button_color = color);
+                  final prefs = SharedPreferences.getInstance();
+                  prefs.then((value) => value.setInt('custom_card', button_color.value));
+                }
+                else if (whichColor == 'primary') {
+                  setState(() => primary_color = color);
+                  final prefs = SharedPreferences.getInstance();
+                  prefs.then((value) => value.setInt('primary_card', primary_color.value));
+                }
               },
               enableLabel: true,
             ),
@@ -73,144 +107,260 @@ class _ThemesScreen extends State<ThemesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-          title: Text(
-            'Choose a theme',
-            style: Theme.of(context).textTheme.headline5,
-          )
-      ),
-      body: Column(
-        children: <Widget>[
-          Material(
-            color: Theme.of(context).cardColor,
-            child: RadioListTile<String>(
-              title: Text(
-                'Dark Theme',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              value: 'dark',
-              groupValue: choosen_theme,
-              onChanged: (String value) { setState(() { choosen_theme = value; }); },
-            ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: RadioListTile<String>(
-              title: Text(
-                'Light Theme',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              value: 'light',
-              groupValue: choosen_theme,
-              onChanged: (String value) { setState(() { choosen_theme = value; }); },
-            ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: RadioListTile<String>(
-              title: Text(
-                'Custom Theme',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              value: 'custom',
-              groupValue: choosen_theme,
-              onChanged: (String value) { setState(() { choosen_theme = value; }); },
-            ),
-          ),
-          ListTile(
-            tileColor: Theme.of(context).primaryColor,
+    if (done == false) {
+      return MaterialApp(
+        home: LoadingScreen(),
+      );
+    }
+    else {
+      return Scaffold(
+        backgroundColor: Theme
+            .of(context)
+            .backgroundColor,
+        appBar: AppBar(
             title: Text(
-              "Custom Theme Settings",
-              style: Theme.of(context).textTheme.headline5,
+              'Choose a theme',
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5,
+            )
+        ),
+        body: Column(
+          children: <Widget>[
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: RadioListTile<String>(
+                title: Text(
+                  'Dark Theme',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6,
+                ),
+                value: 'dark',
+                groupValue: choosen_theme,
+                onChanged: (String value) {
+                  setState(() {
+                    choosen_theme = value;
+                    final prefs = SharedPreferences.getInstance();
+                    prefs.then((value) =>
+                        value.setString('default_theme', 'dark'));
+                  });
+                },
+              ),
             ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: ListTile(
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: RadioListTile<String>(
+                title: Text(
+                  'Light Theme',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6,
+                ),
+                value: 'light',
+                groupValue: choosen_theme,
+                onChanged: (String value) {
+                  setState(() {
+                    choosen_theme = value;
+                    final prefs = SharedPreferences.getInstance();
+                    prefs.then((value) =>
+                        value.setString('default_theme', 'light'));
+                  });
+                },
+              ),
+            ),
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: RadioListTile<String>(
+                title: Text(
+                  'Custom Theme',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline6,
+                ),
+                value: 'custom',
+                groupValue: choosen_theme,
+                onChanged: (String value) {
+                  setState(() {
+                    choosen_theme = value;
+                    final prefs = SharedPreferences.getInstance();
+                    prefs.then((value) {
+                      value.setString('default_theme', 'custom');
+                      value.setInt('custom_primary', primary_color.value);
+                      value.setInt('custom_card', button_color.value);
+                      value.setInt('custom_background', background_color.value);
+                      value.setInt('custom_font_color', font_color.value);
+                      value.setInt('custom_font_size', font_size);
+                    });
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              tileColor: Theme
+                  .of(context)
+                  .primaryColor,
               title: Text(
-                "Font size: $font_size",
-                style: Theme.of(context).textTheme.headline5,
+                "Custom Theme Settings",
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline5,
               ),
-              onTap: _showFontSizeDialog,
             ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    "Font color ",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Icon(
-                    Icons.circle,
-                    color: font_color,
-                  ),
-                ],
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: ListTile(
+                title: Text(
+                  "Font size: $font_size",
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline5,
+                ),
+                onTap: _showFontSizeDialog,
               ),
-              onTap: () { _showColorDialog('font'); },
             ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    "Primary color ",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Icon(
-                    Icons.circle,
-                    color: primary_color,
-                  ),
-                ],
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                      "Font color ",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black)
+                      ),
+                      child: Icon(
+                        Icons.circle,
+                        color: font_color,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  _showColorDialog('font');
+                },
               ),
-              onTap: () { _showColorDialog('primary'); },
             ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    "Button color ",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Icon(
-                    Icons.circle,
-                    color: button_color,
-                  ),
-                ],
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                      "Primary color ",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black)
+                      ),
+                      child: Icon(
+                        Icons.circle,
+                        color: primary_color,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  _showColorDialog('primary');
+                },
               ),
-              onTap: () { _showColorDialog('button'); },
             ),
-          ),
-          Material(
-            color: Theme.of(context).cardColor,
-            child: ListTile(
-              title: Row(
-                children: [
-                  Text(
-                    "Background color ",
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
-                  Icon(
-                    Icons.circle,
-                    color: background_color,
-                  ),
-                ],
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                      "Button color ",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black)
+                      ),
+                      child: Icon(
+                        Icons.circle,
+                        color: button_color,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  _showColorDialog('button');
+                },
               ),
-              onTap: () { _showColorDialog('background'); },
             ),
-          ),
-        ],
-      ),
-    );
+            Material(
+              color: Theme
+                  .of(context)
+                  .cardColor,
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Text(
+                      "Background color ",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline5,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black)
+                      ),
+                      child: Icon(
+                        Icons.circle,
+                        color: background_color,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  _showColorDialog('background');
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 

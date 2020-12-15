@@ -10,7 +10,7 @@ void main() {
 
 void setDefaultSettings() async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.remove('default_theme');
+  //prefs.remove('default_theme');
   String theme = prefs.getString('default_theme');
   if (theme == null) {
     prefs.setString('default_theme', 'light');
@@ -47,6 +47,7 @@ class App extends StatefulWidget {
 
 class _App extends State<App> {
 
+  String theme;
   Color primary_color;
   Color card_color;
   Color background_color;
@@ -56,6 +57,7 @@ class _App extends State<App> {
 
   Future<bool> loadSettings() async {
     await setDefaultSettings();
+    await SharedPreferences.getInstance().then((value) { theme = value.getString('default_theme');});
     primary_color = Color(await getDefaultSetting('primary'));
     card_color = Color(await getDefaultSetting('card'));
     background_color = Color(await getDefaultSetting('background'));

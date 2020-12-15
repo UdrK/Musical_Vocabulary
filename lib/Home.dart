@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'NotesScreen.dart';
 import 'ThemesScreen.dart';
 import 'NotationScreen.dart';
@@ -6,6 +7,7 @@ import 'UserScalesScreen.dart';
 import 'UserChordsScreen.dart';
 
 class Home extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
