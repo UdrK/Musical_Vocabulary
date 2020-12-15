@@ -37,7 +37,6 @@ class ResultsScreen extends StatelessWidget {
           Material(
             color: Theme.of(context).cardColor,
             child: InkWell(
-              onTap: () {},
               child: Container(
                 height: 48.0,
                 alignment: Alignment.centerLeft,

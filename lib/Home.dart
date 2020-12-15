@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'NotesScreen.dart';
+import 'ThemesScreen.dart';
+import 'NotationScreen.dart';
+import 'UserScalesScreen.dart';
+import 'UserChordsScreen.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -24,35 +28,105 @@ class Home extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ),
-              ListTile(
-                title: Text("Font"),
-                trailing: Icon(Icons.arrow_forward),
-                tileColor: Theme.of(context).cardColor,
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ThemesScreen()),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "Themes",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
               ),
-              ListTile(
-                title: Text("Themes"),
-                trailing: Icon(Icons.arrow_forward),
-                tileColor: Theme.of(context).cardColor,
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NotationScreen()),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "Notation",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
               ),
-              ListTile(
-                title: Text("Notation"),
-                trailing: Icon(Icons.arrow_forward),
-                tileColor: Theme.of(context).cardColor,
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  onTap:() {},
+                  child: ListTile(
+                    title: Text(
+                      "MIDI",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
               ),
-              ListTile(
-                title: Text("MIDI"),
-                trailing: Icon(Icons.arrow_forward),
-                tileColor: Theme.of(context).cardColor,
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserScalesScreen()),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "User Scales",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
               ),
-              ListTile(
-                title: Text("+  Add Custom Scales"),
-                trailing: Icon(Icons.arrow_forward),
-                tileColor: Theme.of(context).cardColor,
-              ),
-              ListTile(
-                title: Text("+  Add Custom Chords"),
-                trailing: Icon(Icons.arrow_forward),
-                tileColor: Theme.of(context).cardColor,
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserChordsScreen()),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "User Chords",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
