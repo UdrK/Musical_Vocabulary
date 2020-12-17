@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'Home.dart';
+import 'MusicTheory.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotationScreen extends StatefulWidget {
   @override
@@ -10,9 +9,24 @@ class NotationScreen extends StatefulWidget {
 
 class _NotationScreen extends State<NotationScreen> {
 
-  String notation = 'alphabet';
+  String notation;
 
-  NotationScreen() {}
+  bool done = false;
+
+  Future<bool> loadSettings() async {
+    await SharedPreferences.getInstance().then((value) { notation = value.getString('notation');});
+    MusicTheory.changeNoteRepresentation(notation);
+    return true;
+  }
+
+  @override
+  void initState() {
+    loadSettings().then((value) {
+      setState(() {
+        done = value;
+      });
+    });
+  }
 
   @override
   State<StatefulWidget> createState() {}
@@ -38,7 +52,14 @@ class _NotationScreen extends State<NotationScreen> {
               ),
               value: 'alphabet',
               groupValue: notation,
-              onChanged: (String value) { setState(() { notation = value; }); },
+              onChanged: (String value) {
+                setState(() {
+                  notation = value;
+                  final prefs = SharedPreferences.getInstance();
+                  prefs.then((value) => value.setString('notation', 'alphabet'));
+                  MusicTheory.changeNoteRepresentation(notation);
+                });
+              },
             ),
           ),
           Material(
@@ -50,7 +71,14 @@ class _NotationScreen extends State<NotationScreen> {
               ),
               value: 'solfeggio',
               groupValue: notation,
-              onChanged: (String value) { setState(() { notation = value; }); },
+              onChanged: (String value) {
+                setState(() {
+                  notation = value;
+                  final prefs = SharedPreferences.getInstance();
+                  prefs.then((value) => value.setString('notation', 'solfeggio'));
+                  MusicTheory.changeNoteRepresentation(notation);
+                });
+              },
             ),
           ),
         ],

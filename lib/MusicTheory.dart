@@ -36,7 +36,7 @@ class MusicTheory {
     this.note = note;
   }
 
-  static void toggleNoteRepresentation(String note_representation) {
+  static void changeNoteRepresentation(String note_representation) {
     if (note_representation == 'alphabet') {
       notes = alphabet_notes;
     } else if (note_representation == 'solfeggio') {

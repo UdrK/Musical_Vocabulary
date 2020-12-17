@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'MusicTheory.dart';
 import 'package:musical_vocabulary/LoadingScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Home.dart';
@@ -10,7 +11,7 @@ void main() {
 
 void setDefaultSettings() async {
   final prefs = await SharedPreferences.getInstance();
-  //prefs.remove('default_theme');
+  //prefs.clear();
   String theme = prefs.getString('default_theme');
   if (theme == null) {
     prefs.setString('default_theme', 'light');
@@ -24,6 +25,13 @@ void setDefaultSettings() async {
     prefs.setInt('light_background', Colors.grey[600].value);
     prefs.setInt('light_font_color', Colors.black.value);
     prefs.setInt('light_font_size', 20);
+    prefs.setInt('custom_primary', Colors.white.value);
+    prefs.setInt('custom_card', Colors.white.value);
+    prefs.setInt('custom_background', Colors.white.value);
+    prefs.setInt('custom_font_color', Colors.black.value);
+    prefs.setInt('custom_font_size', 20);
+
+    prefs.setString('notation', 'alphabet');
   }
 }
 
@@ -54,10 +62,13 @@ class _App extends State<App> {
   Color font_color;
   int font_size;
   bool done = false;
+  String notation;
 
   Future<bool> loadSettings() async {
     await setDefaultSettings();
     await SharedPreferences.getInstance().then((value) { theme = value.getString('default_theme');});
+    await SharedPreferences.getInstance().then((value) { notation = value.getString('notation');});
+    MusicTheory.changeNoteRepresentation(notation);
     primary_color = Color(await getDefaultSetting('primary'));
     card_color = Color(await getDefaultSetting('card'));
     background_color = Color(await getDefaultSetting('background'));
