@@ -8,6 +8,7 @@ class ResultsScreen extends StatefulWidget {
   String note;
   String user_choice;
 
+
   ResultsScreen(note, user_choice) {
     this.note = note;
     this.user_choice = user_choice;
@@ -23,9 +24,11 @@ class _ResultsScreen extends State<ResultsScreen> {
   String note;
   String user_choice;
   List<String> scales_or_chords;
+  List<String> bookmarks;
   bool done = false;
 
   _ResultsScreen(String note, String user_choice) {
+    this.bookmarksFile = new UserFile('Bookmarks');
     this.file = new UserFile(user_choice);
     this.user_choice = user_choice;
     this.note = note;
@@ -33,6 +36,11 @@ class _ResultsScreen extends State<ResultsScreen> {
 
   @override
   void initState() {
+    bookmarks = [];
+    bookmarksFile.read().then((List<String> value) {
+      value.forEach((element) => (bookmarks.add(element)));
+    });
+
     if (user_choice == 'Scales') {
       file.read().then((List<String> value) {
         setState(() {
@@ -59,7 +67,19 @@ class _ResultsScreen extends State<ResultsScreen> {
       });
     }
   }
-
+  
+  Icon bookmarkIcon(element) {
+    if (bookmarks.isNotEmpty) {
+      if(!bookmarks.contains(element))
+        return Icon(Icons.bookmark_border);
+      else
+        return Icon(Icons.bookmark);
+    }
+    else {
+      return Icon(Icons.bookmark_border);
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     if (!done) {
@@ -111,16 +131,28 @@ class _ResultsScreen extends State<ResultsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.favorite),
+                                icon: bookmarkIcon(this.scales_or_chords[i]),
                                 tooltip: 'Save to favorites',
                                 onPressed: () {
-                                  // TODO: Save to favorites
+                                  if (bookmarks.isEmpty || !bookmarks.contains(this.scales_or_chords[i])) {
+                                    setState(() {
+                                      bookmarksFile.write(this.scales_or_chords[i], this.scales_or_chords[i+1]);
+                                      bookmarks.add(this.scales_or_chords[i]);
+                                      bookmarks.add(this.scales_or_chords[i+1]);
+                                    });
+                                  } else {
+                                    setState(() {
+                                      bookmarksFile.remove(this.scales_or_chords[i]);
+                                      bookmarks.remove(this.scales_or_chords[i]);
+                                      bookmarks.remove(this.scales_or_chords[i+1]);
+                                    });
+                                  }
                                 },
                               ),
                               IconButton(
                                 icon: Icon(Icons.play_arrow),
                                 //alignment: Alignment.centerRight,
-                                tooltip: 'Save to favorites',
+                                tooltip: 'Play',
                                 onPressed: () {
                                   // TODO: Save to favorites
                                 },
@@ -139,13 +171,3 @@ class _ResultsScreen extends State<ResultsScreen> {
     }
   }
 }
-
-/*
-IconButton(
-  icon: Icon(Icons.favorite),
-  tooltip: 'Save to favorites',
-  onPressed: () {
-    // TODO: Save to favorites
-  },
-),
-*/

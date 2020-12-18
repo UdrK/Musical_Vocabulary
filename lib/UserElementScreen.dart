@@ -36,7 +36,7 @@ class _UserElementScreen extends State<UserElementScreen> {
     widget.file.read().then((List<String> value) {
       setState(() {
         if (widget.element == 'Scales') {
-          user_elements = ['Tap green button to add a scale', 'Tap bin to delete a scale'];
+          user_elements = ['The green button adds scales', 'The bin button deletes a scale'];
           title = 'User Scales';
           help_title = 'Add Scale Help';
           add_title = 'Add Scale';
@@ -44,7 +44,7 @@ class _UserElementScreen extends State<UserElementScreen> {
           hint_pattern = 'Scale pattern (e.g. WWHWWWH)';
         }
         else {
-          user_elements = ['Tap green button to add a chord', 'Tap bin to delete a chord'];
+          user_elements = ['The green button adds chords', 'The bin button deletes a chord'];
           title = 'User Chords';
           help_title = 'Add Chord Help';
           add_title = 'Add Chord';

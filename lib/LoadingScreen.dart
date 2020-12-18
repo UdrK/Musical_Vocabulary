@@ -26,25 +26,3 @@ class LoadingScreen extends StatelessWidget {
     );
   }
 }
-
-/*
-        actions: <Widget> [
-          PopupMenuButton(
-            onSelected: (value) {
-              MusicTheory.toggleNoteRepresentation(value);
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  value: 'solfeggio',
-                  child: Text('Solfeggio notation'),
-                ),
-                PopupMenuItem(
-                  value: 'alphabet',
-                  child: Text('Alphabet notation'),
-                ),
-              ];
-            },
-          ),
-        ]
-* */

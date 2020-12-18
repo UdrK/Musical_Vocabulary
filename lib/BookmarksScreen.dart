@@ -4,56 +4,31 @@ import 'package:musical_vocabulary/UserFile.dart';
 import 'dart:async';
 import 'dart:io';
 
-class UserElementScreen extends StatefulWidget {
+class BookmarksScreen extends StatefulWidget {
   UserFile file;
   String element;
-  UserElementScreen(String element) {
-    this.element = element;
-    if (element == 'Scales' || element == 'Chords') {
-      file = new UserFile(element);
-    }
+  BookmarksScreen() {
+    file = new UserFile('Bookmarks');
   }
 
   @override
-  _UserElementScreen createState() => _UserElementScreen();
+  _BookmarksScreen createState() => _BookmarksScreen();
 }
 
-class _UserElementScreen extends State<UserElementScreen> {
+class _BookmarksScreen extends State<BookmarksScreen> {
 
-  List<String> user_elements;
-  String title;
-  String help_title;
-  String add_title;
-  String hint_name;
-  String hint_pattern;
+  List<String> bookmarks;
   bool done = false;
-  TextEditingController _textFieldNameController = TextEditingController();
-  TextEditingController _textFieldPatternController = TextEditingController();
 
   // reads elements from file
   @override
   void initState() {
     widget.file.read().then((List<String> value) {
       setState(() {
-        if (widget.element == 'Scales') {
-          user_elements = ['Tap green button to add a scale', 'Tap bin to delete a scale'];
-          title = 'User Scales';
-          help_title = 'Add Scale Help';
-          add_title = 'Add Scale';
-          hint_name = 'Scale name (e.g. Major)';
-          hint_pattern = 'Scale pattern (e.g. WWHWWWH)';
-        }
-        else {
-          user_elements = ['Tap green button to add a chord', 'Tap bin to delete a chord'];
-          title = 'User Chords';
-          help_title = 'Add Chord Help';
-          add_title = 'Add Chord';
-          hint_name = 'Chord name (e.g. Major Triad)';
-          hint_pattern = 'Chord pattern (e.g. MP)';
-        }
+        bookmarks = ['Add bookmarks in the', 'scales or chords screens'];
         if (value != null) {
           value.forEach((element) {
-            user_elements.add(element);
+            bookmarks.add(element);
           });
         }
         done = true;
@@ -61,114 +36,13 @@ class _UserElementScreen extends State<UserElementScreen> {
     });
   }
 
-  Future<File> writeElement(String name, String pattern) {
-    setState(() {
-      user_elements.add(name);
-      user_elements.add(pattern);
-    });
-
-    return widget.file.write(name, pattern);
-  }
-
   Future<File> removeElement(String name, String pattern) {
     setState(() {
-      user_elements.remove(name);
-      user_elements.remove(pattern);
+      bookmarks.remove(name);
+      bookmarks.remove(pattern);
     });
 
     return widget.file.remove(name);
-  }
-
-  void _showHelp(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              help_title,
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("The name shouldn't include 'Scale' or 'Chord'."),
-                  Text(""),
-                  Text("The pattern refers to how many semitones you should jump from the previous note to get a note in the scale or chord. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
-                  Text(""),
-                  Text("• 1 semitone: H"),
-                  Text("• 2 semitones: W"),
-                  Text("• 3 semitones: m"),
-                  Text("• 4 semitones: M"),
-                  Text("• 5 semitones: p"),
-                  Text("• 6 semitones: d"),
-                  Text("• 7 semitones: P"),
-                  Text("• 8 semitones: A"),
-                  Text("• 9 semitones: D"),
-                  Text("• 10 semitones: s"),
-                  Text("• 11 semitones: S"),
-                ]
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        }
-    );
-  }
-
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            add_title,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _textFieldNameController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: hint_name),
-              ),
-              TextField(
-                controller: _textFieldPatternController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: hint_pattern),
-              ),
-            ]
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text('Help'),
-              onPressed: () {
-                _showHelp(context);
-              },
-            ),
-            new FlatButton(
-              child: new Text('Add'),
-              onPressed: () {
-                String name = _textFieldNameController.text;
-                String pattern = _textFieldPatternController.text;
-                writeElement(name, pattern);
-              },
-            )
-          ],
-        );
-      }
-    );
   }
 
   @override
@@ -180,16 +54,9 @@ class _UserElementScreen extends State<UserElementScreen> {
     } else {
       return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _showDialog(context);
-          },
-          child: Icon(Icons.add),
-          backgroundColor: Colors.green,
-        ),
         appBar: AppBar(
             title: Text(
-              title,
+              'Bookmarks',
               style: Theme.of(context).textTheme.headline5,
             )
         ),
@@ -201,7 +68,7 @@ class _UserElementScreen extends State<UserElementScreen> {
           childAspectRatio: 16/4,
 
           children: [
-            for(int i=0; i<this.user_elements.length; i+=2)
+            for(int i=0; i<this.bookmarks.length; i+=2)
               Material(
                 color: Theme.of(context).cardColor,
                 child: InkWell(
@@ -216,11 +83,11 @@ class _UserElementScreen extends State<UserElementScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  this.user_elements[i],
+                                  this.bookmarks[i],
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 Text(
-                                  this.user_elements[i+1],
+                                  this.bookmarks[i+1],
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                               ]
@@ -233,7 +100,7 @@ class _UserElementScreen extends State<UserElementScreen> {
                                 tooltip: 'Delete',
                                 onPressed: () {
                                   if(i != 0)
-                                    removeElement(this.user_elements[i], this.user_elements[i+1]);
+                                    removeElement(this.bookmarks[i], this.bookmarks[i+1]);
                                 },
                               ),
                             ],

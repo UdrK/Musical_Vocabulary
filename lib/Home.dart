@@ -3,6 +3,7 @@ import 'NotesScreen.dart';
 import 'ThemesScreen.dart';
 import 'NotationScreen.dart';
 import 'UserElementScreen.dart';
+import 'BookmarksScreen.dart';
 
 class Home extends StatelessWidget {
 
@@ -188,7 +189,7 @@ class Home extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotesScreen('Bookmarks')), // TODO: create page for favourites
+                  MaterialPageRoute(builder: (context) => BookmarksScreen()),
                 );
               },
               child: Container(
@@ -209,25 +210,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-/*
-        actions: <Widget> [
-          PopupMenuButton(
-            onSelected: (value) {
-              MusicTheory.toggleNoteRepresentation(value);
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                PopupMenuItem(
-                  value: 'solfeggio',
-                  child: Text('Solfeggio notation'),
-                ),
-                PopupMenuItem(
-                  value: 'alphabet',
-                  child: Text('Alphabet notation'),
-                ),
-              ];
-            },
-          ),
-        ]
-* */
