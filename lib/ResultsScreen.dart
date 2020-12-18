@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:musical_vocabulary/LoadingScreen.dart';
-import 'package:musical_vocabulary/UserScalesScreen.dart';
-import 'package:musical_vocabulary/UserChordsScreen.dart';
+import 'LoadingScreen.dart';
 import 'MusicTheory.dart';
+import 'UserFile.dart';
 
 class ResultsScreen extends StatefulWidget {
 
@@ -19,12 +18,15 @@ class ResultsScreen extends StatefulWidget {
 }
 class _ResultsScreen extends State<ResultsScreen> {
 
+  UserFile bookmarksFile;
+  UserFile file;
   String note;
   String user_choice;
   List<String> scales_or_chords;
   bool done = false;
 
   _ResultsScreen(String note, String user_choice) {
+    this.file = new UserFile(user_choice);
     this.user_choice = user_choice;
     this.note = note;
   }
@@ -32,7 +34,7 @@ class _ResultsScreen extends State<ResultsScreen> {
   @override
   void initState() {
     if (user_choice == 'Scales') {
-      UserScalesFile().readScales().then((List<String> value) {
+      file.read().then((List<String> value) {
         setState(() {
           if (value != null) {
             for(int i=0; i<value.length; i+=2) {
@@ -44,7 +46,7 @@ class _ResultsScreen extends State<ResultsScreen> {
         });
       });
     } else if (user_choice == 'Chords') {
-      UserChordsFile().readChords().then((List<String> value) {
+      file.read().then((List<String> value) {
         setState(() {
           if (value != null) {
             for(int i=0; i<value.length; i+=2) {

@@ -1,77 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:musical_vocabulary/LoadingScreen.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:musical_vocabulary/UserFile.dart';
 import 'dart:async';
 import 'dart:io';
 
-class UserScalesFile {
-
-  String filename = 'user_scales.txt';
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/'+filename);
-  }
-
-  Future<List<String>> readScales() async {
-    try {
-      final file = await _localFile;
-      String file_content = await file.readAsString();
-      List<String> scales = file_content.split('\n');
-      if (scales.isNotEmpty)
-        scales.removeLast();
-      return scales;
-    } catch (e) {}
-  }
-
-  Future<File> writeScale(String name, String pattern) async {
-    final file = await _localFile;
-    await file.writeAsString('$name\n$pattern\n', mode: FileMode.append);
-    return file;
-  }
-
-  Future<File> removeScale(String name) async {
-    List<String> scales = await readScales();
-    final file = await _localFile;
-    await file.writeAsString('', mode: FileMode.write); //clears file
-    int i = 0;
-    for (i=0; i<scales.length; i+=2) {
-      if(name != scales[i]) {                   // writes every other scale
-        await writeScale(scales[i], scales[i+1]);
-      }
+class UserElementScreen extends StatefulWidget {
+  UserFile file;
+  String element;
+  UserElementScreen(String element) {
+    this.element = element;
+    if (element == 'Scales' || element == 'Chords') {
+      file = new UserFile(element);
     }
-    return file;
   }
-}
 
-class UserScalesScreen extends StatefulWidget {
-  UserScalesFile file = new UserScalesFile();
   @override
-  _UserScalesScreen createState() => _UserScalesScreen();
+  _UserElementScreen createState() => _UserElementScreen();
 }
 
-class _UserScalesScreen extends State<UserScalesScreen> {
+class _UserElementScreen extends State<UserElementScreen> {
 
-  List<String> user_scales;
+  List<String> user_elements;
+  String title;
+  String help_title;
+  String add_title;
+  String hint_name;
+  String hint_pattern;
   bool done = false;
   TextEditingController _textFieldNameController = TextEditingController();
   TextEditingController _textFieldPatternController = TextEditingController();
 
-  // reads scales from file
+  // reads elements from file
   @override
   void initState() {
-    widget.file.readScales().then((List<String> value) {
+    widget.file.read().then((List<String> value) {
       setState(() {
-        user_scales = ['Tap green button to add a scale', 'Tap bin to delete a scale'];
+        if (widget.element == 'Scales') {
+          user_elements = ['Tap green button to add a scale', 'Tap bin to delete a scale'];
+          title = 'User Scales';
+          help_title = 'Add Scale Help';
+          add_title = 'Add Scale';
+          hint_name = 'Scale name (e.g. Major)';
+          hint_pattern = 'Scale pattern (e.g. WWHWWWH)';
+        }
+        else {
+          user_elements = ['Tap green button to add a chord', 'Tap bin to delete a chord'];
+          title = 'User Chords';
+          help_title = 'Add Chord Help';
+          add_title = 'Add Chord';
+          hint_name = 'Chord name (e.g. Major Triad)';
+          hint_pattern = 'Chord pattern (e.g. MP)';
+        }
         if (value != null) {
           value.forEach((element) {
-            user_scales.add(element);
+            user_elements.add(element);
           });
         }
         done = true;
@@ -79,22 +61,22 @@ class _UserScalesScreen extends State<UserScalesScreen> {
     });
   }
 
-  Future<File> writeScale(String name, String pattern) {
+  Future<File> writeElement(String name, String pattern) {
     setState(() {
-      user_scales.add(name);
-      user_scales.add(pattern);
+      user_elements.add(name);
+      user_elements.add(pattern);
     });
 
-    return widget.file.writeScale(name, pattern);
+    return widget.file.write(name, pattern);
   }
 
-  Future<File> removeScale(String name, String pattern) {
+  Future<File> removeElement(String name, String pattern) {
     setState(() {
-      user_scales.remove(name);
-      user_scales.remove(pattern);
+      user_elements.remove(name);
+      user_elements.remove(pattern);
     });
 
-    return widget.file.removeScale(name);
+    return widget.file.remove(name);
   }
 
   void _showHelp(BuildContext context) {
@@ -103,7 +85,7 @@ class _UserScalesScreen extends State<UserScalesScreen> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'Add Scale Help',
+              help_title,
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -112,9 +94,9 @@ class _UserScalesScreen extends State<UserScalesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("The name shouldn't include 'Scale' as the app adds it on its own."),
+                  Text("The name shouldn't include 'Scale' or 'Chord'."),
                   Text(""),
-                  Text("The pattern refers to how many semitones you should jump from the previous note to get a note in the scale. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
+                  Text("The pattern refers to how many semitones you should jump from the previous note to get a note in the scale or chord. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
                   Text(""),
                   Text("• 1 semitone: H"),
                   Text("• 2 semitones: W"),
@@ -148,7 +130,7 @@ class _UserScalesScreen extends State<UserScalesScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            'Add Scale',
+            add_title,
             style: TextStyle(
               color: Colors.black,
             ),
@@ -159,12 +141,12 @@ class _UserScalesScreen extends State<UserScalesScreen> {
               TextField(
                 controller: _textFieldNameController,
                 keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: "Scale name (e.g. Major)"),
+                decoration: InputDecoration(hintText: hint_name),
               ),
               TextField(
                 controller: _textFieldPatternController,
                 keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: "Scale pattern (e.g. WWHWWWH)"),
+                decoration: InputDecoration(hintText: hint_pattern),
               ),
             ]
           ),
@@ -180,7 +162,7 @@ class _UserScalesScreen extends State<UserScalesScreen> {
               onPressed: () {
                 String name = _textFieldNameController.text;
                 String pattern = _textFieldPatternController.text;
-                writeScale(name, pattern);
+                writeElement(name, pattern);
               },
             )
           ],
@@ -207,7 +189,7 @@ class _UserScalesScreen extends State<UserScalesScreen> {
         ),
         appBar: AppBar(
             title: Text(
-              'User Scales',
+              title,
               style: Theme.of(context).textTheme.headline5,
             )
         ),
@@ -219,7 +201,7 @@ class _UserScalesScreen extends State<UserScalesScreen> {
           childAspectRatio: 16/4,
 
           children: [
-            for(int i=0; i<this.user_scales.length; i+=2)
+            for(int i=0; i<this.user_elements.length; i+=2)
               Material(
                 color: Theme.of(context).cardColor,
                 child: InkWell(
@@ -234,11 +216,11 @@ class _UserScalesScreen extends State<UserScalesScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  this.user_scales[i],
+                                  this.user_elements[i],
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 Text(
-                                  this.user_scales[i+1],
+                                  this.user_elements[i+1],
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                               ]
@@ -251,7 +233,7 @@ class _UserScalesScreen extends State<UserScalesScreen> {
                                 tooltip: 'Delete',
                                 onPressed: () {
                                   if(i != 0)
-                                    removeScale(this.user_scales[i], this.user_scales[i+1]);
+                                    removeElement(this.user_elements[i], this.user_elements[i+1]);
                                 },
                               ),
                             ],

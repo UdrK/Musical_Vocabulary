@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'NotesScreen.dart';
 import 'ThemesScreen.dart';
 import 'NotationScreen.dart';
-import 'UserScalesScreen.dart';
-import 'UserChordsScreen.dart';
+import 'UserElementScreen.dart';
 
 class Home extends StatelessWidget {
 
@@ -93,7 +92,7 @@ class Home extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => UserScalesScreen()),
+                      MaterialPageRoute(builder: (context) => UserElementScreen('Scales')),
                     );
                   },
                   child: ListTile(
@@ -114,7 +113,7 @@ class Home extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => UserChordsScreen()),
+                      MaterialPageRoute(builder: (context) => UserElementScreen('Chords')),
                     );
                   },
                   child: ListTile(
@@ -189,7 +188,7 @@ class Home extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NotesScreen('Favourites')), // TODO: create page for favourites
+                  MaterialPageRoute(builder: (context) => NotesScreen('Bookmarks')), // TODO: create page for favourites
                 );
               },
               child: Container(
@@ -197,7 +196,7 @@ class Home extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  'Favourites',
+                  'Bookmarks',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),

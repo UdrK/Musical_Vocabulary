@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'NotesScreen.dart';
-import 'ThemesScreen.dart';
-import 'NotationScreen.dart';
-import 'UserScalesScreen.dart';
-import 'UserChordsScreen.dart';
 
 class LoadingScreen extends StatelessWidget {
   @override

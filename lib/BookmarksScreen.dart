@@ -1,77 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:musical_vocabulary/LoadingScreen.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:musical_vocabulary/UserFile.dart';
 import 'dart:async';
 import 'dart:io';
 
-class UserChordsFile {
-
-  String filename = 'user_chords.txt';
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/'+filename);
-  }
-
-  Future<List<String>> readChords() async {
-    try {
-      final file = await _localFile;
-      String file_content = await file.readAsString();
-      List<String> chords = file_content.split('\n');
-      if (chords.isNotEmpty)
-        chords.removeLast();
-      return chords;
-    } catch (e) {}
-  }
-
-  Future<File> writeChord(String name, String pattern) async {
-    final file = await _localFile;
-    await file.writeAsString('$name\n$pattern\n', mode: FileMode.append);
-    return file;
-  }
-
-  Future<File> removeChord(String name) async {
-    List<String> chords = await readChords();
-    final file = await _localFile;
-    await file.writeAsString('', mode: FileMode.write); //clears file
-    int i = 0;
-    for (i=0; i<chords.length; i+=2) {
-      if(name != chords[i]) {                   // writes every other chord
-        await writeChord(chords[i], chords[i+1]);
-      }
+class UserElementScreen extends StatefulWidget {
+  UserFile file;
+  String element;
+  UserElementScreen(String element) {
+    this.element = element;
+    if (element == 'Scales' || element == 'Chords') {
+      file = new UserFile(element);
     }
-    return file;
   }
-}
 
-class UserChordsScreen extends StatefulWidget {
-  UserChordsFile file = new UserChordsFile();
   @override
-  _UserChordsScreen createState() => _UserChordsScreen();
+  _UserElementScreen createState() => _UserElementScreen();
 }
 
-class _UserChordsScreen extends State<UserChordsScreen> {
+class _UserElementScreen extends State<UserElementScreen> {
 
-  List<String> user_chords;
+  List<String> user_elements;
+  String title;
+  String help_title;
+  String add_title;
+  String hint_name;
+  String hint_pattern;
   bool done = false;
   TextEditingController _textFieldNameController = TextEditingController();
   TextEditingController _textFieldPatternController = TextEditingController();
 
-  // reads chords from file
+  // reads elements from file
   @override
   void initState() {
-    widget.file.readChords().then((List<String> value) {
+    widget.file.read().then((List<String> value) {
       setState(() {
-        user_chords = ['Tap green button to add a chord', 'Tap bin to delete a chord'];
+        if (widget.element == 'Scales') {
+          user_elements = ['Tap green button to add a scale', 'Tap bin to delete a scale'];
+          title = 'User Scales';
+          help_title = 'Add Scale Help';
+          add_title = 'Add Scale';
+          hint_name = 'Scale name (e.g. Major)';
+          hint_pattern = 'Scale pattern (e.g. WWHWWWH)';
+        }
+        else {
+          user_elements = ['Tap green button to add a chord', 'Tap bin to delete a chord'];
+          title = 'User Chords';
+          help_title = 'Add Chord Help';
+          add_title = 'Add Chord';
+          hint_name = 'Chord name (e.g. Major Triad)';
+          hint_pattern = 'Chord pattern (e.g. MP)';
+        }
         if (value != null) {
           value.forEach((element) {
-            user_chords.add(element);
+            user_elements.add(element);
           });
         }
         done = true;
@@ -79,22 +61,22 @@ class _UserChordsScreen extends State<UserChordsScreen> {
     });
   }
 
-  Future<File> writeChord(String name, String pattern) {
+  Future<File> writeElement(String name, String pattern) {
     setState(() {
-      user_chords.add(name);
-      user_chords.add(pattern);
+      user_elements.add(name);
+      user_elements.add(pattern);
     });
 
-    return widget.file.writeChord(name, pattern);
+    return widget.file.write(name, pattern);
   }
 
-  Future<File> removeChord(String name, String pattern) {
+  Future<File> removeElement(String name, String pattern) {
     setState(() {
-      user_chords.remove(name);
-      user_chords.remove(pattern);
+      user_elements.remove(name);
+      user_elements.remove(pattern);
     });
 
-    return widget.file.removeChord(name);
+    return widget.file.remove(name);
   }
 
   void _showHelp(BuildContext context) {
@@ -103,18 +85,18 @@ class _UserChordsScreen extends State<UserChordsScreen> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'Add Chord Help',
+              help_title,
               style: TextStyle(
                 color: Colors.black,
               ),
             ),
             content: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("The name shouldn't include 'Chord' as the app adds it on its own."),
+                  Text("The name shouldn't include 'Scale' or 'Chord'."),
                   Text(""),
-                  Text("The pattern refers to how many semitones you should jump from the previous note to get a note in the chord. For example, in the major chord that is: M P (don't put spaces in the pattern)."),
+                  Text("The pattern refers to how many semitones you should jump from the previous note to get a note in the scale or chord. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
                   Text(""),
                   Text("• 1 semitone: H"),
                   Text("• 2 semitones: W"),
@@ -144,48 +126,48 @@ class _UserChordsScreen extends State<UserChordsScreen> {
 
   void _showDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Add Chord',
-              style: TextStyle(
-                color: Colors.black,
-              ),
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            add_title,
+            style: TextStyle(
+              color: Colors.black,
             ),
-            content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _textFieldNameController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(hintText: "Chord name (e.g. Major Triad)"),
-                  ),
-                  TextField(
-                    controller: _textFieldPatternController,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(hintText: "Chord pattern (e.g. MP)"),
-                  ),
-                ]
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('Help'),
-                onPressed: () {
-                  _showHelp(context);
-                },
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _textFieldNameController,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(hintText: hint_name),
               ),
-              new FlatButton(
-                child: new Text('Add'),
-                onPressed: () {
-                  String name = _textFieldNameController.text;
-                  String pattern = _textFieldPatternController.text;
-                  writeChord(name, pattern);
-                },
-              )
-            ],
-          );
-        }
+              TextField(
+                controller: _textFieldPatternController,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(hintText: hint_pattern),
+              ),
+            ]
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('Help'),
+              onPressed: () {
+                _showHelp(context);
+              },
+            ),
+            new FlatButton(
+              child: new Text('Add'),
+              onPressed: () {
+                String name = _textFieldNameController.text;
+                String pattern = _textFieldPatternController.text;
+                writeElement(name, pattern);
+              },
+            )
+          ],
+        );
+      }
     );
   }
 
@@ -207,7 +189,7 @@ class _UserChordsScreen extends State<UserChordsScreen> {
         ),
         appBar: AppBar(
             title: Text(
-              'User Chords',
+              title,
               style: Theme.of(context).textTheme.headline5,
             )
         ),
@@ -219,7 +201,7 @@ class _UserChordsScreen extends State<UserChordsScreen> {
           childAspectRatio: 16/4,
 
           children: [
-            for(int i=0; i<this.user_chords.length; i+=2)
+            for(int i=0; i<this.user_elements.length; i+=2)
               Material(
                 color: Theme.of(context).cardColor,
                 child: InkWell(
@@ -234,11 +216,11 @@ class _UserChordsScreen extends State<UserChordsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  this.user_chords[i],
+                                  this.user_elements[i],
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 Text(
-                                  this.user_chords[i+1],
+                                  this.user_elements[i+1],
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                               ]
@@ -251,7 +233,7 @@ class _UserChordsScreen extends State<UserChordsScreen> {
                                 tooltip: 'Delete',
                                 onPressed: () {
                                   if(i != 0)
-                                    removeChord(this.user_chords[i], this.user_chords[i+1]);
+                                    removeElement(this.user_elements[i], this.user_elements[i+1]);
                                 },
                               ),
                             ],
