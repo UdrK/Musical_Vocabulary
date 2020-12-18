@@ -1,91 +1,140 @@
 import 'package:flutter/material.dart';
+import 'package:musical_vocabulary/LoadingScreen.dart';
+import 'package:musical_vocabulary/UserScalesScreen.dart';
+import 'package:musical_vocabulary/UserChordsScreen.dart';
 import 'MusicTheory.dart';
 
-class ResultsScreen extends StatelessWidget {
+class ResultsScreen extends StatefulWidget {
 
   String note;
-  List<String> scales_or_chords;
+  String user_choice;
 
-  ResultsScreen(String note, String scales_or_chords) {
+  ResultsScreen(note, user_choice) {
     this.note = note;
-    if (scales_or_chords == "Scales") {
-      this.scales_or_chords = MusicTheory(note).scales();
-    } else if (scales_or_chords == "Chords") {
-      this.scales_or_chords = MusicTheory(note).chords();
+    this.user_choice = user_choice;
+  }
+
+  @override
+  _ResultsScreen createState() => _ResultsScreen(note, user_choice);
+}
+class _ResultsScreen extends State<ResultsScreen> {
+
+  String note;
+  String user_choice;
+  List<String> scales_or_chords;
+  bool done = false;
+
+  _ResultsScreen(String note, String user_choice) {
+    this.user_choice = user_choice;
+    this.note = note;
+  }
+
+  @override
+  void initState() {
+    if (user_choice == 'Scales') {
+      UserScalesFile().readScales().then((List<String> value) {
+        setState(() {
+          if (value != null) {
+            for(int i=0; i<value.length; i+=2) {
+              MusicTheory.scales_map[value[i]] = value[i+1];
+            }
+          }
+          scales_or_chords = MusicTheory(note).scales();
+          done=true;
+        });
+      });
+    } else if (user_choice == 'Chords') {
+      UserChordsFile().readChords().then((List<String> value) {
+        setState(() {
+          if (value != null) {
+            for(int i=0; i<value.length; i+=2) {
+              MusicTheory.chords_map[value[i]] = value[i+1];
+            }
+          }
+          scales_or_chords = MusicTheory(note).chords();
+          done=true;
+        });
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-          title: Text(
-            'Musical Vocabulary',
-            style: Theme.of(context).textTheme.headline5,
-          )
-      ),
-      body: GridView.count(
+    if (!done) {
+      return MaterialApp(
+        home: LoadingScreen(),
+      );
+    } else {
+      return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(
+            title: Text(
+              'Musical Vocabulary',
+              style: Theme.of(context).textTheme.headline5,
+            )
+        ),
+        body: GridView.count(
 
-        padding: const EdgeInsets.only(top: 3),
-        crossAxisCount: 1,
-        mainAxisSpacing: 3,
-        childAspectRatio: 16/4,
+          padding: const EdgeInsets.only(top: 3),
+          crossAxisCount: 1,
+          mainAxisSpacing: 3,
+          childAspectRatio: 16/4,
 
-        children: [
-          for(int i=0; i<this.scales_or_chords.length; i+=2)
-          Material(
-            color: Theme.of(context).cardColor,
-            child: InkWell(
-              child: Container(
-                height: 48.0,
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for(int i=0; i<this.scales_or_chords.length; i+=2)
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  child: Container(
+                      height: 48.0,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            this.scales_or_chords[i],
-                            style: Theme.of(context).textTheme.headline4,
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  this.scales_or_chords[i],
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                Text(
+                                  this.scales_or_chords[i+1],
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                              ]
                           ),
-                          Text(
-                            this.scales_or_chords[i+1],
-                            style: Theme.of(context).textTheme.headline6,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.favorite),
+                                tooltip: 'Save to favorites',
+                                onPressed: () {
+                                  // TODO: Save to favorites
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.play_arrow),
+                                //alignment: Alignment.centerRight,
+                                tooltip: 'Save to favorites',
+                                onPressed: () {
+                                  // TODO: Save to favorites
+                                },
+                              ),
+                            ],
                           ),
-                        ]
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.favorite),
-                          tooltip: 'Save to favorites',
-                          onPressed: () {
-                            // TODO: Save to favorites
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.play_arrow),
-                          //alignment: Alignment.centerRight,
-                          tooltip: 'Save to favorites',
-                          onPressed: () {
-                            // TODO: Save to favorites
-                          },
-                        ),
-                      ],
-                    ),
 
-                  ],
-                )
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+                        ],
+                      )
+                  ),
+                ),
+              )
+          ],
+        ),
+      );
+    }
   }
 }
 
