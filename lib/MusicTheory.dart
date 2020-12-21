@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_midi/flutter_midi.dart';
+import 'package:flutter/services.dart';
 
 class MusicTheory {
   String note;
+
   static List<String> solfeggio_notes = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
-  static List<String> alphabet_notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+  static List<String> alphabet_notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
   static List<String> notes = alphabet_notes;
 
   static var chords_map = <String, String> {
@@ -42,6 +44,26 @@ class MusicTheory {
     } else if (note_representation == 'solfeggio') {
       notes = solfeggio_notes;
     }
+  }
+
+  static void play(String element) async {
+    List<int> midiNotes = [];
+    element.split(' ').forEach((note) {
+      midiNotes.add(60+notes.indexOf(note));
+    });
+
+    FlutterMidi midiPlayer = new FlutterMidi();
+    midiPlayer.unmute();
+    await rootBundle.load("assets/soundfonts/Plastic_Strings.sf2").then((sf2) {
+      midiPlayer.prepare(sf2: sf2, name: "Plastic_Strings.sf2");
+    });
+
+    midiNotes.forEach((note) {
+      midiPlayer.playMidiNote(midi: note);
+
+      Future.delayed(Duration(milliseconds: 300),
+              () =>  midiPlayer.stopMidiNote(midi: note));
+    });
   }
 
   List<String> scales() {

@@ -154,7 +154,7 @@ class _ResultsScreen extends State<ResultsScreen> {
                                 //alignment: Alignment.centerRight,
                                 tooltip: 'Play',
                                 onPressed: () {
-                                  // TODO: Save to favorites
+                                  MusicTheory.play(this.scales_or_chords[i+1]);
                                 },
                               ),
                             ],
