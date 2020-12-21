@@ -16,7 +16,6 @@ class BookmarksScreen extends StatefulWidget {
 }
 
 class _BookmarksScreen extends State<BookmarksScreen> {
-
   List<String> bookmarks;
   bool done = false;
 

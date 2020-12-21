@@ -4,10 +4,8 @@ import 'MusicTheory.dart';
 import 'UserFile.dart';
 
 class ResultsScreen extends StatefulWidget {
-
   String note;
   String user_choice;
-
 
   ResultsScreen(note, user_choice) {
     this.note = note;
@@ -149,17 +147,8 @@ class _ResultsScreen extends State<ResultsScreen> {
                                   }
                                 },
                               ),
-                              IconButton(
-                                icon: Icon(Icons.play_arrow),
-                                //alignment: Alignment.centerRight,
-                                tooltip: 'Play',
-                                onPressed: () {
-                                  MusicTheory.play(this.scales_or_chords[i+1]);
-                                },
-                              ),
                             ],
                           ),
-
                         ],
                       )
                   ),

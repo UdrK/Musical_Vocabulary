@@ -5,13 +5,11 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemesScreen extends StatefulWidget {
-
   @override
   _ThemesScreen createState() => _ThemesScreen();
 }
 
 class _ThemesScreen extends State<ThemesScreen> {
-
   String choosen_theme;
   int font_size = 20;
   Color font_color = Colors.white;
@@ -94,7 +92,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                 else if (whichColor == 'primary') {
                   setState(() => primary_color = color);
                   final prefs = SharedPreferences.getInstance();
-                  prefs.then((value) => value.setInt('primary_card', primary_color.value));
+                  prefs.then((value) => value.setInt('custom_primary', primary_color.value));
                 }
               },
               enableLabel: true,
@@ -241,7 +239,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                 title: Row(
                   children: [
                     Text(
-                      "Font color ",
+                      "Font color: ",
                       style: Theme
                           .of(context)
                           .textTheme
@@ -272,7 +270,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                 title: Row(
                   children: [
                     Text(
-                      "Primary color ",
+                      "Primary color: ",
                       style: Theme
                           .of(context)
                           .textTheme
@@ -303,7 +301,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                 title: Row(
                   children: [
                     Text(
-                      "Button color ",
+                      "Button color: ",
                       style: Theme
                           .of(context)
                           .textTheme
@@ -334,7 +332,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                 title: Row(
                   children: [
                     Text(
-                      "Background color ",
+                      "Background color: ",
                       style: Theme
                           .of(context)
                           .textTheme

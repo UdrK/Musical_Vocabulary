@@ -163,6 +163,7 @@ class _UserElementScreen extends State<UserElementScreen> {
                 String name = _textFieldNameController.text;
                 String pattern = _textFieldPatternController.text;
                 writeElement(name, pattern);
+                Navigator.of(context).pop();
               },
             )
           ],

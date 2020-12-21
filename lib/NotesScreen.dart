@@ -3,7 +3,6 @@ import 'MusicTheory.dart';
 import 'ResultsScreen.dart';
 
 class NotesScreen extends StatelessWidget {
-
   String origin;
 
   NotesScreen(String origin) {

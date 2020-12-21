@@ -14,7 +14,7 @@ void setDefaultSettings() async {
   //prefs.clear();
   String theme = prefs.getString('default_theme');
   if (theme == null) {
-    prefs.setString('default_theme', 'light');
+    prefs.setString('default_theme', 'dark');
     prefs.setInt('dark_primary', Colors.blueGrey[700].value);
     prefs.setInt('dark_card', Colors.blueGrey[800].value);
     prefs.setInt('dark_background', Colors.blueGrey[900].value);
@@ -96,8 +96,8 @@ class _App extends State<App> {
     else {
       return MaterialApp(
         theme: ThemeData(
-          primaryColor: primary_color,   // app bar color
-          cardColor: card_color,      // cards or tiles color
+          primaryColor: primary_color,        // app bar color
+          cardColor: card_color,              // cards or tiles color
           backgroundColor: background_color,  // background
           iconTheme: IconThemeData(
             color: font_color,

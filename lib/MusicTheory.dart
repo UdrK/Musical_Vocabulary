@@ -1,6 +1,3 @@
-import 'package:flutter_midi/flutter_midi.dart';
-import 'package:flutter/services.dart';
-
 class MusicTheory {
   String note;
 
@@ -44,26 +41,6 @@ class MusicTheory {
     } else if (note_representation == 'solfeggio') {
       notes = solfeggio_notes;
     }
-  }
-
-  static void play(String element) async {
-    List<int> midiNotes = [];
-    element.split(' ').forEach((note) {
-      midiNotes.add(60+notes.indexOf(note));
-    });
-
-    FlutterMidi midiPlayer = new FlutterMidi();
-    midiPlayer.unmute();
-    await rootBundle.load("assets/soundfonts/Plastic_Strings.sf2").then((sf2) {
-      midiPlayer.prepare(sf2: sf2, name: "Plastic_Strings.sf2");
-    });
-
-    midiNotes.forEach((note) {
-      midiPlayer.playMidiNote(midi: note);
-
-      Future.delayed(Duration(milliseconds: 300),
-              () =>  midiPlayer.stopMidiNote(midi: note));
-    });
   }
 
   List<String> scales() {

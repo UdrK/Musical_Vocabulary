@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 class UserFile {
-
   String filename;
   UserFile(String filename) {
     this.filename = 'User_'+filename+'.txt';

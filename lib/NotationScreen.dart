@@ -8,7 +8,6 @@ class NotationScreen extends StatefulWidget {
 }
 
 class _NotationScreen extends State<NotationScreen> {
-
   String notation;
 
   bool done = false;

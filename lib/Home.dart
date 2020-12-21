@@ -6,7 +6,6 @@ import 'UserElementScreen.dart';
 import 'BookmarksScreen.dart';
 
 class Home extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,22 +61,6 @@ class Home extends StatelessWidget {
                   child: ListTile(
                     title: Text(
                       "Notation",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                  ),
-                ),
-              ),
-              Material(
-                color: Theme.of(context).cardColor,
-                child: InkWell(
-                  onTap:() {},
-                  child: ListTile(
-                    title: Text(
-                      "MIDI",
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     trailing: Icon(
@@ -203,9 +186,7 @@ class Home extends StatelessWidget {
               ),
             ),
           ),
-
         ],
-
       ),
     );
   }
