@@ -5,7 +5,12 @@ import 'NotationScreen.dart';
 import 'UserElementScreen.dart';
 import 'BookmarksScreen.dart';
 
-class Home extends StatelessWidget {
+/*
+Home screen of the application. Lets the user change the settings using the
+hamburger icon on the top left, browse the scales, chords and bookmarks
+*/
+
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +47,9 @@ class Home extends StatelessWidget {
                       "Themes",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    trailing: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
+                    leading: Icon(
+                      Icons.palette_outlined,
+                      color: Theme.of(context).textTheme.headline6.color,
                     ),
                   ),
                 ),
@@ -63,9 +68,9 @@ class Home extends StatelessWidget {
                       "Notation",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    trailing: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
+                    leading: Icon(
+                      Icons.music_note,
+                      color: Theme.of(context).textTheme.headline6.color,
                     ),
                   ),
                 ),
@@ -81,12 +86,12 @@ class Home extends StatelessWidget {
                   },
                   child: ListTile(
                     title: Text(
-                      "User Scales",
+                      "Your Scales",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    trailing: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
+                    leading: Icon(
+                      Icons.settings,
+                      color: Theme.of(context).textTheme.headline6.color,
                     ),
                   ),
                 ),
@@ -102,12 +107,12 @@ class Home extends StatelessWidget {
                   },
                   child: ListTile(
                     title: Text(
-                      "User Chords",
+                      "Your Chords",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    trailing: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
+                    leading: Icon(
+                      Icons.settings,
+                      color: Theme.of(context).textTheme.headline6.color,
                     ),
                   ),
                 ),

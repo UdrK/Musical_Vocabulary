@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:musical_vocabulary/LoadingScreen.dart';
-import 'package:musical_vocabulary/UserFile.dart';
+import 'LoadingScreen.dart';
+import 'UserFile.dart';
 import 'dart:async';
 import 'dart:io';
+
+/*
+This screen shows the bookmarks saved by the user. Here the user can find both
+scales and chords he decided to bookmark
+*/
 
 class BookmarksScreen extends StatefulWidget {
   UserFile file;
@@ -24,7 +29,7 @@ class _BookmarksScreen extends State<BookmarksScreen> {
   void initState() {
     widget.file.read().then((List<String> value) {
       setState(() {
-        bookmarks = ['Add bookmarks in the', 'scales or chords screens'];
+        bookmarks = [];
         if (value != null) {
           value.forEach((element) {
             bookmarks.add(element);
@@ -67,6 +72,34 @@ class _BookmarksScreen extends State<BookmarksScreen> {
           childAspectRatio: 16/4,
 
           children: [
+            Material(
+              color: Theme.of(context).cardColor,
+              child: InkWell(
+                child: Container(
+                    height: 48.0,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Add bookmarks in the',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Text(
+                                'scales or chord screens',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ]
+                        ),
+                      ],
+                    )
+                ),
+              ),
+            ),
             for(int i=0; i<this.bookmarks.length; i+=2)
               Material(
                 color: Theme.of(context).cardColor,
@@ -95,11 +128,10 @@ class _BookmarksScreen extends State<BookmarksScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.delete_forever),
+                                icon: Icon(Icons.bookmark),
                                 tooltip: 'Delete',
                                 onPressed: () {
-                                  if(i != 0)
-                                    removeElement(this.bookmarks[i], this.bookmarks[i+1]);
+                                  removeElement(this.bookmarks[i], this.bookmarks[i+1]);
                                 },
                               ),
                             ],

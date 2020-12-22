@@ -1,3 +1,8 @@
+/*
+The logic of the application. Takes a root note a finds all sorts of scales and
+chords
+*/
+
 class MusicTheory {
   String note;
 

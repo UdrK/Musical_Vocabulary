@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:musical_vocabulary/LoadingScreen.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'LoadingScreen.dart';
+
+/*
+This screen lets the user pick a theme and make a custom one
+*/
+
 
 class ThemesScreen extends StatefulWidget {
   @override
@@ -207,13 +212,19 @@ class _ThemesScreen extends State<ThemesScreen> {
             ListTile(
               tileColor: Theme
                   .of(context)
+                  .cardColor,
+              title: Text(
+                "Theme changes apply after restart",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            ListTile(
+              tileColor: Theme
+                  .of(context)
                   .primaryColor,
               title: Text(
                 "Custom Theme Settings",
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline5,
+                style: Theme.of(context).textTheme.headline5,
               ),
             ),
             Material(
@@ -223,10 +234,7 @@ class _ThemesScreen extends State<ThemesScreen> {
               child: ListTile(
                 title: Text(
                   "Font size: $font_size",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headline5,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
                 onTap: _showFontSizeDialog,
               ),
@@ -240,10 +248,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                   children: [
                     Text(
                       "Font color: ",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -271,10 +276,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                   children: [
                     Text(
                       "Primary color: ",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -302,10 +304,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                   children: [
                     Text(
                       "Button color: ",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -333,10 +332,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                   children: [
                     Text(
                       "Background color: ",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     Container(
                       decoration: BoxDecoration(

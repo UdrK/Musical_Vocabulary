@@ -3,6 +3,11 @@ import 'LoadingScreen.dart';
 import 'MusicTheory.dart';
 import 'UserFile.dart';
 
+/*
+This screen shows the user either a list of Scales or Chords depending on what
+the user selected in the home screen
+*/
+
 class ResultsScreen extends StatefulWidget {
   String note;
   String user_choice;
@@ -16,7 +21,6 @@ class ResultsScreen extends StatefulWidget {
   _ResultsScreen createState() => _ResultsScreen(note, user_choice);
 }
 class _ResultsScreen extends State<ResultsScreen> {
-
   UserFile bookmarksFile;
   UserFile file;
   String note;

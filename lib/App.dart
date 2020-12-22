@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'MusicTheory.dart';
 import 'package:musical_vocabulary/LoadingScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Home.dart';
+import 'HomeScreen.dart';
+
+/*
+App entry point, here settings are loaded (a loading screen is eventually shown)
+and the home screen is started
+*/
 
 void main() {
   runApp(App());
@@ -47,14 +52,12 @@ Future<int> getDefaultSetting(setting) async {
 }
 
 class App extends StatefulWidget {
-
   @override
   _App createState() => _App();
 
 }
 
 class _App extends State<App> {
-
   String theme;
   Color primary_color;
   Color card_color;
@@ -95,6 +98,7 @@ class _App extends State<App> {
     }
     else {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: primary_color,        // app bar color
           cardColor: card_color,              // cards or tiles color
@@ -122,7 +126,7 @@ class _App extends State<App> {
             ),
           ),
         ),
-        home: Home(),
+        home: HomeScreen(),
       );
     }
   }

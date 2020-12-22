@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:musical_vocabulary/LoadingScreen.dart';
-import 'package:musical_vocabulary/UserFile.dart';
+import 'LoadingScreen.dart';
+import 'UserFile.dart';
 import 'dart:async';
 import 'dart:io';
+
+/*
+This screen lets the user save a custom scale or chord based on what has been
+chosen in the hamburger menu in the home screen
+*/
 
 class UserElementScreen extends StatefulWidget {
   UserFile file;
@@ -19,7 +24,7 @@ class UserElementScreen extends StatefulWidget {
 }
 
 class _UserElementScreen extends State<UserElementScreen> {
-
+  List<String> instructions;
   List<String> user_elements;
   String title;
   String help_title;
@@ -36,7 +41,8 @@ class _UserElementScreen extends State<UserElementScreen> {
     widget.file.read().then((List<String> value) {
       setState(() {
         if (widget.element == 'Scales') {
-          user_elements = ['The green button adds scales', 'The bin button deletes a scale'];
+          instructions = ['The green button adds scales', 'The bin button deletes a scale'];
+          user_elements = [];
           title = 'User Scales';
           help_title = 'Add Scale Help';
           add_title = 'Add Scale';
@@ -44,7 +50,8 @@ class _UserElementScreen extends State<UserElementScreen> {
           hint_pattern = 'Scale pattern (e.g. WWHWWWH)';
         }
         else {
-          user_elements = ['The green button adds chords', 'The bin button deletes a chord'];
+          instructions = ['The green button adds chords', 'The bin button deletes a chord'];
+          user_elements = [];
           title = 'User Chords';
           help_title = 'Add Chord Help';
           add_title = 'Add Chord';
@@ -202,6 +209,34 @@ class _UserElementScreen extends State<UserElementScreen> {
           childAspectRatio: 16/4,
 
           children: [
+            Material(
+              color: Theme.of(context).cardColor,
+              child: InkWell(
+                child: Container(
+                    height: 48.0,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                this.instructions[0],
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              Text(
+                                this.instructions[1],
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ]
+                        ),
+                      ],
+                    )
+                ),
+              ),
+            ),
             for(int i=0; i<this.user_elements.length; i+=2)
               Material(
                 color: Theme.of(context).cardColor,
@@ -233,8 +268,7 @@ class _UserElementScreen extends State<UserElementScreen> {
                                 icon: Icon(Icons.delete_forever),
                                 tooltip: 'Delete',
                                 onPressed: () {
-                                  if(i != 0)
-                                    removeElement(this.user_elements[i], this.user_elements[i+1]);
+                                  removeElement(this.user_elements[i], this.user_elements[i+1]);
                                 },
                               ),
                             ],

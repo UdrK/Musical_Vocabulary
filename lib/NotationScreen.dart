@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'MusicTheory.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/*
+This screen lets the user decide if the notes will be displayed in
+solfeggio notation: Do, Re, Mi, ...
+or
+alphabet notation: C, D, E, ...
+*/
+
 class NotationScreen extends StatefulWidget {
   @override
   _NotationScreen createState() => _NotationScreen();
