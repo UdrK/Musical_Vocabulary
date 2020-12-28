@@ -19,7 +19,7 @@ class NotesScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
           title: Text(
-            'Musical Vocabulary',
+            'Choose a root note',
             style: Theme.of(context).textTheme.headline5,
           )
       ),

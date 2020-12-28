@@ -43,20 +43,20 @@ class _UserElementScreen extends State<UserElementScreen> {
         if (widget.element == 'Scales') {
           instructions = ['The green button adds scales', 'The bin button deletes a scale'];
           user_elements = [];
-          title = 'User Scales';
+          title = 'Your Scales';
           help_title = 'Add Scale Help';
           add_title = 'Add Scale';
           hint_name = 'Scale name (e.g. Major)';
-          hint_pattern = 'Scale pattern (e.g. WWHWWWH)';
+          hint_pattern = 'Intervals (e.g. WWHWWWH)';
         }
         else {
           instructions = ['The green button adds chords', 'The bin button deletes a chord'];
           user_elements = [];
-          title = 'User Chords';
+          title = 'Your Chords';
           help_title = 'Add Chord Help';
           add_title = 'Add Chord';
           hint_name = 'Chord name (e.g. Major Triad)';
-          hint_pattern = 'Chord pattern (e.g. MP)';
+          hint_pattern = 'Intervals (e.g. MP)';
         }
         if (value != null) {
           value.forEach((element) {
@@ -103,7 +103,7 @@ class _UserElementScreen extends State<UserElementScreen> {
                 children: [
                   Text("The name shouldn't include 'Scale' or 'Chord'."),
                   Text(""),
-                  Text("The pattern refers to how many semitones you should jump from the previous note to get a note in the scale or chord. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
+                  Text("Intervals refers to how many semitones you should jump from the previous note to get a note in the scale or chord. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
                   Text(""),
                   Text("• 1 semitone: H"),
                   Text("• 2 semitones: W"),

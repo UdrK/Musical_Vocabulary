@@ -99,6 +99,7 @@ class _ThemesScreen extends State<ThemesScreen> {
                   final prefs = SharedPreferences.getInstance();
                   prefs.then((value) => value.setInt('custom_primary', primary_color.value));
                 }
+                Navigator.of(context).pop();
               },
               enableLabel: true,
             ),
@@ -214,8 +215,13 @@ class _ThemesScreen extends State<ThemesScreen> {
                   .of(context)
                   .cardColor,
               title: Text(
-                "Theme changes apply after restart",
-                style: Theme.of(context).textTheme.headline6,
+                "*Theme changes apply after restart",
+                style: TextStyle(
+                  fontSize: Theme.of(context).textTheme.headline6.fontSize,
+                  fontWeight: Theme.of(context).textTheme.headline6.fontWeight,
+                  color: Theme.of(context).textTheme.headline6.color,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
             ListTile(
