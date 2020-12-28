@@ -10,4 +10,4 @@ So, the main page lets me decide if i want to lookup scales or chords, and the s
 Screenshot of the app in action:
 
 
-![Screenshot_music_vocabulary](https://user-images.githubusercontent.com/26527575/91875557-ea0bdd00-ec7b-11ea-955c-16d185ae3e99.png)
+![consultazione_raccolta](https://user-images.githubusercontent.com/26527575/103226112-a8d6c180-492b-11eb-8ba5-9b51a48f3cbb.jpg)
