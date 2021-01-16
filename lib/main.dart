@@ -11,7 +11,7 @@ and the home screen is started
 */
 
 void main() {
-  runApp(App());
+  runApp(MusicalVocabulary());
 }
 
 void setDefaultSettings() async {
@@ -51,13 +51,13 @@ Future<int> getDefaultSetting(setting) async {
   } else throw new FormatException("Wrong default theme");
 }
 
-class App extends StatefulWidget {
+class MusicalVocabulary extends StatefulWidget {
   @override
-  _App createState() => _App();
+  _MusicalVocabulary createState() => _MusicalVocabulary();
 
 }
 
-class _App extends State<App> {
+class _MusicalVocabulary extends State<MusicalVocabulary> {
   String theme;
   Color primary_color;
   Color card_color;

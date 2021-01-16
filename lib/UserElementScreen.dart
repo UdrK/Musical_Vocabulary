@@ -68,6 +68,15 @@ class _UserElementScreen extends State<UserElementScreen> {
     });
   }
 
+  bool isValidPattern(String pattern) {
+    List<String> valid_characters = ['H', 'W', 'm', 'M', 'p', 'd', 'P', 'A', 'D', 's', 'S'];
+    for(int i=0; i<pattern.length; i++) {
+      if (!valid_characters.contains(pattern[i]))
+        return false;
+    }
+    return true;
+  }
+
   Future<File> writeElement(String name, String pattern) {
     setState(() {
       user_elements.add(name);
@@ -84,6 +93,37 @@ class _UserElementScreen extends State<UserElementScreen> {
     });
 
     return widget.file.remove(name);
+  }
+
+  void _showWrongPatternDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              help_title,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Error: the pattern you entered contains an invalid character"),
+                ]
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        }
+    );
   }
 
   void _showHelp(BuildContext context) {
@@ -159,6 +199,12 @@ class _UserElementScreen extends State<UserElementScreen> {
           ),
           actions: <Widget>[
             new FlatButton(
+              child: new Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
               child: new Text('Help'),
               onPressed: () {
                 _showHelp(context);
@@ -169,10 +215,14 @@ class _UserElementScreen extends State<UserElementScreen> {
               onPressed: () {
                 String name = _textFieldNameController.text;
                 String pattern = _textFieldPatternController.text;
-                writeElement(name, pattern);
-                Navigator.of(context).pop();
+                if(!isValidPattern(pattern)) {
+                  _showWrongPatternDialog(context);
+                } else {
+                  writeElement(name, pattern);
+                  Navigator.of(context).pop();
+                }
               },
-            )
+            ),
           ],
         );
       }
