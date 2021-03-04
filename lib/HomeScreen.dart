@@ -78,6 +78,22 @@ class HomeScreen extends StatelessWidget {
               Material(
                 color: Theme.of(context).cardColor,
                 child: InkWell(
+                  onTap:() {},
+                  child: ListTile(
+                    title: Text(
+                      "Player",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                ),
+              ),
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,

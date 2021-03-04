@@ -1,3 +1,6 @@
+import 'package:flutter_midi/flutter_midi.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'LoadingScreen.dart';
 import 'MusicTheory.dart';
@@ -21,6 +24,7 @@ class ResultsScreen extends StatefulWidget {
   _ResultsScreen createState() => _ResultsScreen(note, user_choice);
 }
 class _ResultsScreen extends State<ResultsScreen> {
+  final _flutterMidi = FlutterMidi(); // TODO: MIDI
   UserFile bookmarksFile;
   UserFile file;
   String note;
@@ -36,8 +40,17 @@ class _ResultsScreen extends State<ResultsScreen> {
     this.note = note;
   }
 
+  // TODO: MIDI
+  void load() async {
+    _flutterMidi.unmute();
+    await rootBundle.load("assets/soundfonts/Yamaha-Grand-Lite-v2.0.sf2").then((sf2) {
+      _flutterMidi.prepare(sf2: sf2, name: "Yamaha-Grand-Lite-v2.0.sf2");
+    });
+  }
+
   @override
   void initState() {
+    load(); // TODO: MIDI
     bookmarks = [];
     bookmarksFile.read().then((List<String> value) {
       value.forEach((element) => (bookmarks.add(element)));
@@ -134,7 +147,6 @@ class _ResultsScreen extends State<ResultsScreen> {
                             children: [
                               IconButton(
                                 icon: bookmarkIcon(this.scales_or_chords[i]),
-                                tooltip: 'Save to favorites',
                                 onPressed: () {
                                   if (bookmarks.isEmpty || !bookmarks.contains(this.scales_or_chords[i])) {
                                     setState(() {
@@ -149,6 +161,20 @@ class _ResultsScreen extends State<ResultsScreen> {
                                       bookmarks.remove(this.scales_or_chords[i+1]);
                                     });
                                   }
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.play_arrow),
+                                //alignment: Alignment.centerRight,
+                                tooltip: 'Play',
+                                onPressed: () {
+                                  List<int> midiNotes = MusicTheory.scaleMidi(this.scales_or_chords[i+1]);
+                                  midiNotes.forEach((note) {
+                                    _flutterMidi.playMidiNote(midi: note);
+                                    sleep(Duration(milliseconds: 200));
+                                    _flutterMidi.stopMidiNote(midi: note);
+                                    sleep(Duration(milliseconds: 200));
+                                  });
                                 },
                               ),
                             ],

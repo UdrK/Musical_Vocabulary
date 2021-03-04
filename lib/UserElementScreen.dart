@@ -28,6 +28,7 @@ class _UserElementScreen extends State<UserElementScreen> {
   List<String> user_elements;
   String title;
   String help_title;
+  String help_text;
   String add_title;
   String hint_name;
   String hint_pattern;
@@ -45,6 +46,7 @@ class _UserElementScreen extends State<UserElementScreen> {
           user_elements = [];
           title = 'Your Scales';
           help_title = 'Add Scale Help';
+          help_text = "Intervals refers to how many semitones you should jump from the previous note to get the next note in the scale. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern).";
           add_title = 'Add Scale';
           hint_name = 'Scale name (e.g. Major)';
           hint_pattern = 'Intervals (e.g. WWHWWWH)';
@@ -54,6 +56,7 @@ class _UserElementScreen extends State<UserElementScreen> {
           user_elements = [];
           title = 'Your Chords';
           help_title = 'Add Chord Help';
+          help_text = "Intervals refers to how many semitones you should jump from the root note to get the next note in the chord. For example, in the major triad that is: M P (don't put spaces in the pattern).";
           add_title = 'Add Chord';
           hint_name = 'Chord name (e.g. Major Triad)';
           hint_pattern = 'Intervals (e.g. MP)';
@@ -101,7 +104,7 @@ class _UserElementScreen extends State<UserElementScreen> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              help_title,
+              'Error',
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -110,7 +113,7 @@ class _UserElementScreen extends State<UserElementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Error: the pattern you entered contains an invalid character"),
+                  Text("The pattern you entered contains an invalid character"),
                 ]
             ),
             actions: <Widget>[
@@ -138,12 +141,12 @@ class _UserElementScreen extends State<UserElementScreen> {
               ),
             ),
             content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text("The name shouldn't include 'Scale' or 'Chord'."),
                   Text(""),
-                  Text("Intervals refers to how many semitones you should jump from the previous note to get a note in the scale or chord. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern)."),
+                  Text(help_text),
                   Text(""),
                   Text("• 1 semitone: H"),
                   Text("• 2 semitones: W"),
@@ -173,59 +176,59 @@ class _UserElementScreen extends State<UserElementScreen> {
 
   void _showDialog(BuildContext context) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            add_title,
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _textFieldNameController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: hint_name),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              add_title,
+              style: TextStyle(
+                color: Colors.black,
               ),
-              TextField(
-                controller: _textFieldPatternController,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(hintText: hint_pattern),
-              ),
-            ]
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
             ),
-            new FlatButton(
-              child: new Text('Help'),
-              onPressed: () {
-                _showHelp(context);
-              },
+            content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _textFieldNameController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(hintText: hint_name),
+                  ),
+                  TextField(
+                    controller: _textFieldPatternController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(hintText: hint_pattern),
+                  ),
+                ]
             ),
-            new FlatButton(
-              child: new Text('Add'),
-              onPressed: () {
-                String name = _textFieldNameController.text;
-                String pattern = _textFieldPatternController.text;
-                if(!isValidPattern(pattern)) {
-                  _showWrongPatternDialog(context);
-                } else {
-                  writeElement(name, pattern);
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Close'),
+                onPressed: () {
                   Navigator.of(context).pop();
-                }
-              },
-            ),
-          ],
-        );
-      }
+                },
+              ),
+              new FlatButton(
+                child: new Text('Help'),
+                onPressed: () {
+                  _showHelp(context);
+                },
+              ),
+              new FlatButton(
+                child: new Text('Add'),
+                onPressed: () {
+                  String name = _textFieldNameController.text;
+                  String pattern = _textFieldPatternController.text;
+                  if(!isValidPattern(pattern)) {
+                    _showWrongPatternDialog(context);
+                  } else {
+                    writeElement(name, pattern);
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+            ],
+          );
+        }
     );
   }
 

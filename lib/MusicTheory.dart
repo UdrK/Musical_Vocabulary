@@ -48,6 +48,18 @@ class MusicTheory {
     }
   }
 
+  // TODO: MIDI
+  static List<int> scaleMidi(String scale) {
+    List<int> midiNotes = [];
+    scale.split(' ').forEach((note) {
+      midiNotes.add(60+notes.indexOf(note));
+    });
+    if(midiNotes[0]==midiNotes[midiNotes.length-1]){
+      midiNotes[midiNotes.length-1] += 12;
+    }
+    return midiNotes;
+  }
+
   List<String> scales() {
     int start = notes.indexOf(note);
     List<String> scales = List<String>();
