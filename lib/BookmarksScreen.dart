@@ -56,94 +56,97 @@ class _BookmarksScreen extends State<BookmarksScreen> {
         home: LoadingScreen(),
       );
     } else {
-      return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(
-            title: Text(
-              'Bookmarks',
-              style: Theme.of(context).textTheme.headline5,
-            )
-        ),
-        body: GridView.count(
-
-          padding: const EdgeInsets.only(top: 3),
-          crossAxisCount: 1,
-          mainAxisSpacing: 3,
-          childAspectRatio: 16/4,
-
-          children: [
-            Material(
-              color: Theme.of(context).cardColor,
-              child: InkWell(
-                child: Container(
-                    height: 48.0,
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Add bookmarks in the',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              Text(
-                                'scales or chord screens',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                            ]
-                        ),
-                      ],
-                    )
-                ),
-              ),
+      if (this.bookmarks.isEmpty) {
+        return Scaffold(
+            backgroundColor: Theme.of(context).backgroundColor,
+            appBar: AppBar(
+              title: Text(
+                'Bookmarks',
+                style: Theme.of(context).textTheme.headline5,
+              )
             ),
-            for(int i=0; i<this.bookmarks.length; i+=2)
-              Material(
-                color: Theme.of(context).cardColor,
-                child: InkWell(
-                  child: Container(
-                      height: 48.0,
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            body: Center(
+                child: Material(
+                  color: Theme.of(context).backgroundColor,
+                  child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.headline6,
                         children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  this.bookmarks[i],
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                Text(
-                                  this.bookmarks[i+1],
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ]
+                          TextSpan(text: "Tap "),
+                          WidgetSpan(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                              child: Icon(Icons.bookmark_border),
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.bookmark),
-                                tooltip: 'Delete',
-                                onPressed: () {
-                                  removeElement(this.bookmarks[i], this.bookmarks[i+1]);
-                                },
-                              ),
-                            ],
-                          ),
+                          TextSpan(text: ' in the Scales or Chords screen to add it to your Bookmarks'),
                         ],
                       )
                   ),
-                ),
+                ))
+            );
+      } else {
+        return Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          appBar: AppBar(
+              title: Text(
+                'Bookmarks',
+                style: Theme.of(context).textTheme.headline5,
               )
-          ],
-        ),
-      );
+          ),
+          body: GridView.count(
+            padding: const EdgeInsets.only(top: 3),
+            crossAxisCount: 1,
+            mainAxisSpacing: 3,
+            childAspectRatio: 16/4,
+
+            children: [
+              for(int i=0; i<this.bookmarks.length; i+=2)
+                Material(
+                  color: Theme.of(context).cardColor,
+                  child: InkWell(
+                    child: Container(
+                        height: 48.0,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    this.bookmarks[i],
+                                    style: Theme.of(context).textTheme.headline4,
+                                  ),
+                                  Text(
+                                    this.bookmarks[i+1],
+                                    style: Theme.of(context).textTheme.headline6,
+                                  ),
+                                ]
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.bookmark),
+                                  tooltip: 'Delete',
+                                  onPressed: () {
+                                    removeElement(this.bookmarks[i], this.bookmarks[i+1]);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                    ),
+                  ),
+                )
+            ],
+          ),
+        );
+      }
     }
   }
 }

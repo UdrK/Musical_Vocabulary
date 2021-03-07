@@ -32,6 +32,7 @@ class _ResultsScreen extends State<ResultsScreen> {
   List<String> scales_or_chords;
   List<String> bookmarks;
   bool done = false;
+  List<bool> playing;
 
   _ResultsScreen(String note, String user_choice) {
     this.bookmarksFile = new UserFile('Bookmarks');
@@ -50,8 +51,9 @@ class _ResultsScreen extends State<ResultsScreen> {
 
   @override
   void initState() {
-    load(); // TODO: MIDI
+    load();
     bookmarks = [];
+    playing = [];
     bookmarksFile.read().then((List<String> value) {
       value.forEach((element) => (bookmarks.add(element)));
     });
@@ -65,6 +67,9 @@ class _ResultsScreen extends State<ResultsScreen> {
             }
           }
           scales_or_chords = MusicTheory(note).scales();
+          for(int i=0; i<scales_or_chords.length; i+=1) {
+            playing.add(false);
+          }
           done=true;
         });
       });
@@ -77,10 +82,14 @@ class _ResultsScreen extends State<ResultsScreen> {
             }
           }
           scales_or_chords = MusicTheory(note).chords();
+          for(int i=0; i<scales_or_chords.length; i+=1) {
+            playing.add(false);
+          }
           done=true;
         });
       });
     }
+
   }
   
   Icon bookmarkIcon(element) {
@@ -94,7 +103,30 @@ class _ResultsScreen extends State<ResultsScreen> {
       return Icon(Icons.bookmark_border);
     }
   }
-  
+
+  void play(List<int> midiNotes, int index) async {
+    setState(() {
+      playing[index] = true;
+    });
+    for(int i=0; i<midiNotes.length; i+=1) {
+      if (playing[index]) {
+        _flutterMidi.playMidiNote(midi: midiNotes[i]);
+        await Future.delayed(Duration(milliseconds: MusicTheory.note_duration));
+        _flutterMidi.stopMidiNote(midi: midiNotes[i]);
+        await Future.delayed(Duration(milliseconds: MusicTheory.interval_between_notes));
+      }
+    }
+    setState(() {
+      playing[index] = false;
+    });
+  }
+
+  void stop(int index) async {
+    setState(() {
+      playing[index] = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!done) {
@@ -129,18 +161,25 @@ class _ResultsScreen extends State<ResultsScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  this.scales_or_chords[i],
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                Text(
-                                  this.scales_or_chords[i+1],
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ]
+                          Expanded(
+                            flex: 7,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    this.scales_or_chords[i],
+                                    style: Theme.of(context).textTheme.headline4,
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      this.scales_or_chords[i+1],
+                                      style: Theme.of(context).textTheme.headline6,
+                                      maxLines: 2,
+                                      //overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ]
+                            ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -164,17 +203,14 @@ class _ResultsScreen extends State<ResultsScreen> {
                                 },
                               ),
                               IconButton(
-                                icon: Icon(Icons.play_arrow),
+                                icon: (playing[i]) ? Icon(Icons.stop) : Icon(Icons.play_arrow),
                                 //alignment: Alignment.centerRight,
                                 tooltip: 'Play',
                                 onPressed: () {
-                                  List<int> midiNotes = MusicTheory.scaleMidi(this.scales_or_chords[i+1]);
-                                  midiNotes.forEach((note) {
-                                    _flutterMidi.playMidiNote(midi: note);
-                                    sleep(Duration(milliseconds: 200));
-                                    _flutterMidi.stopMidiNote(midi: note);
-                                    sleep(Duration(milliseconds: 200));
-                                  });
+                                  List<int> midiNotes = MusicTheory.midi(this.scales_or_chords[i + 1]);
+                                  if (playing[i]) {
+                                    stop(i);
+                                  } else play(midiNotes, i);
                                 },
                               ),
                             ],

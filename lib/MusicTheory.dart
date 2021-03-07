@@ -2,10 +2,13 @@
 The logic of the application. Takes a root note a finds all sorts of scales and
 chords
 */
+import 'dart:math';
 
 class MusicTheory {
   String note;
 
+  static int interval_between_notes;
+  static int note_duration;
   static List<String> solfeggio_notes = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
   static List<String> alphabet_notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
   static List<String> notes = alphabet_notes;
@@ -40,6 +43,10 @@ class MusicTheory {
     this.note = note;
   }
 
+  static void changeBpm(int bpm) {
+    interval_between_notes = ((60/bpm)*1000).round();
+  }
+
   static void changeNoteRepresentation(String note_representation) {
     if (note_representation == 'alphabet') {
       notes = alphabet_notes;
@@ -48,12 +55,28 @@ class MusicTheory {
     }
   }
 
-  // TODO: MIDI
-  static List<int> scaleMidi(String scale) {
+  /*
+  *     MusicTheory.changeLegatoStaccato(legatoStaccato);
+    MusicTheory.changeBpm(bpm);*/
+  static void changeLegatoStaccato(String legato_staccato) {
+    if (legato_staccato == 'legato') {
+      note_duration = interval_between_notes;
+    } else {
+      note_duration = (interval_between_notes/2).round();
+    }
+  }
+
+  static List<int> midi(String scale_or_chord) {
     List<int> midiNotes = [];
-    scale.split(' ').forEach((note) {
+    scale_or_chord.split(' ').forEach((note) {
       midiNotes.add(60+notes.indexOf(note));
     });
+    int indexMax = midiNotes.indexOf(midiNotes.reduce(max));
+    for(int i=0; i<midiNotes.length; i+=1) {
+      if(i > indexMax) {
+        midiNotes[i] += 12;
+      }
+    }
     if(midiNotes[0]==midiNotes[midiNotes.length-1]){
       midiNotes[midiNotes.length-1] += 12;
     }

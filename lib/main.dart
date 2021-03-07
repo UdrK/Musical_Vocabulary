@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'MusicTheory.dart';
-import 'package:musical_vocabulary/LoadingScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'MusicTheory.dart';
+import 'LoadingScreen.dart';
 import 'HomeScreen.dart';
 
 /*
@@ -16,7 +16,7 @@ void main() {
 
 void setDefaultSettings() async {
   final prefs = await SharedPreferences.getInstance();
-  //prefs.clear();
+  prefs.clear(); // TODO: comment this
   String theme = prefs.getString('default_theme');
   if (theme == null) {
     prefs.setString('default_theme', 'dark');
@@ -37,6 +37,9 @@ void setDefaultSettings() async {
     prefs.setInt('custom_font_size', 20);
 
     prefs.setString('notation', 'alphabet');
+
+    prefs.setString('legatoStaccato', 'staccato');
+    prefs.setInt('bpm', 60);
   }
 }
 
@@ -59,25 +62,36 @@ class MusicalVocabulary extends StatefulWidget {
 
 class _MusicalVocabulary extends State<MusicalVocabulary> {
   String theme;
-  Color primary_color;
-  Color card_color;
-  Color background_color;
-  Color font_color;
-  int font_size;
+  static Color primary_color;
+  static Color card_color;
+  static Color background_color;
+  static Color font_color;
+  static int font_size;
   bool done = false;
   String notation;
+  String legatoStaccato;
+  int bpm;
 
   Future<bool> loadSettings() async {
     await setDefaultSettings();
     await SharedPreferences.getInstance().then((value) { theme = value.getString('default_theme');});
     await SharedPreferences.getInstance().then((value) { notation = value.getString('notation');});
+    await SharedPreferences.getInstance().then((value) { legatoStaccato = value.getString('legatoStaccato');});
+    await SharedPreferences.getInstance().then((value) { bpm = value.getInt('bpm');});
     MusicTheory.changeNoteRepresentation(notation);
+    MusicTheory.changeBpm(bpm);
+    MusicTheory.changeLegatoStaccato(legatoStaccato);
+
     primary_color = Color(await getDefaultSetting('primary'));
     card_color = Color(await getDefaultSetting('card'));
     background_color = Color(await getDefaultSetting('background'));
     font_color = Color(await getDefaultSetting('font_color'));
     font_size = await getDefaultSetting('font_size');
     return true;
+  }
+
+  void setTheme(Color pc, Color cc, Color bc, Color fc, int fs) {
+
   }
 
   @override
@@ -100,26 +114,29 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primaryColor: primary_color,        // app bar color
-          cardColor: card_color,              // cards or tiles color
-          backgroundColor: background_color,  // background
+          primaryColor: primary_color,
+          // app bar color
+          cardColor: card_color,
+          // cards or tiles color
+          backgroundColor: background_color,
+          // background
           iconTheme: IconThemeData(
             color: font_color,
           ),
           textTheme: TextTheme(
-            headline6: TextStyle(     // notes
-              fontSize: font_size+.0,
+            headline6: TextStyle( // notes
+              fontSize: font_size + .0,
               fontWeight: FontWeight.w300,
               color: font_color,
             ),
-            headline5: TextStyle(     // titles
-              fontSize: font_size+4.0,
+            headline5: TextStyle( // titles
+              fontSize: font_size + 4.0,
               fontWeight: FontWeight.w300,
               fontStyle: FontStyle.italic,
               color: font_color,
             ),
-            headline4: TextStyle(     // names
-              fontSize: font_size+.0,
+            headline4: TextStyle( // names
+              fontSize: font_size + .0,
               fontWeight: FontWeight.w300,
               fontStyle: FontStyle.italic,
               color: font_color,
@@ -131,5 +148,3 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
     }
   }
 }
-
-

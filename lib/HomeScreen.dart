@@ -4,6 +4,7 @@ import 'ThemesScreen.dart';
 import 'NotationScreen.dart';
 import 'UserElementScreen.dart';
 import 'BookmarksScreen.dart';
+import 'PlayerScreen.dart';
 
 /*
 Home screen of the application. Lets the user change the settings using the
@@ -78,15 +79,20 @@ class HomeScreen extends StatelessWidget {
               Material(
                 color: Theme.of(context).cardColor,
                 child: InkWell(
-                  onTap:() {},
+                  onTap:() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PlayerScreen()),
+                    );
+                  },
                   child: ListTile(
                     title: Text(
-                      "Player",
+                      "Player Settings",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    trailing: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
+                    leading: Icon(
+                      Icons.play_arrow,
+                      color: Theme.of(context).textTheme.headline6.color,
                     ),
                   ),
                 ),
@@ -138,7 +144,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: GridView.count(
-
         padding: const EdgeInsets.only(top: 3),
         crossAxisCount: 1,
         mainAxisSpacing: 3,

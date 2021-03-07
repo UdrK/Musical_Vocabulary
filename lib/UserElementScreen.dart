@@ -42,22 +42,22 @@ class _UserElementScreen extends State<UserElementScreen> {
     widget.file.read().then((List<String> value) {
       setState(() {
         if (widget.element == 'Scales') {
-          instructions = ['The green button adds scales', 'The bin button deletes a scale'];
+          instructions = ['scale'];
           user_elements = [];
           title = 'Your Scales';
           help_title = 'Add Scale Help';
           help_text = "Intervals refers to how many semitones you should jump from the previous note to get the next note in the scale. For example, in the major scale that is: W W H W W W H (don't put spaces in the pattern).";
-          add_title = 'Add Scale';
+          add_title = 'Add a Scale';
           hint_name = 'Scale name (e.g. Major)';
           hint_pattern = 'Intervals (e.g. WWHWWWH)';
         }
         else {
-          instructions = ['The green button adds chords', 'The bin button deletes a chord'];
+          instructions = ['chord'];
           user_elements = [];
           title = 'Your Chords';
           help_title = 'Add Chord Help';
           help_text = "Intervals refers to how many semitones you should jump from the root note to get the next note in the chord. For example, in the major triad that is: M P (don't put spaces in the pattern).";
-          add_title = 'Add Chord';
+          add_title = 'Add a Chord';
           hint_name = 'Chord name (e.g. Major Triad)';
           hint_pattern = 'Intervals (e.g. MP)';
         }
@@ -73,6 +73,8 @@ class _UserElementScreen extends State<UserElementScreen> {
 
   bool isValidPattern(String pattern) {
     List<String> valid_characters = ['H', 'W', 'm', 'M', 'p', 'd', 'P', 'A', 'D', 's', 'S'];
+    if (pattern.length > 10)
+      return false;
     for(int i=0; i<pattern.length; i++) {
       if (!valid_characters.contains(pattern[i]))
         return false;
@@ -104,7 +106,7 @@ class _UserElementScreen extends State<UserElementScreen> {
         builder: (context) {
           return AlertDialog(
             title: Text(
-              'Error',
+              'Incorrect Intervals',
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -113,7 +115,7 @@ class _UserElementScreen extends State<UserElementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("The pattern you entered contains an invalid character"),
+                  Text("The pattern you entered is either too long or contains one or more invalid characters"),
                 ]
             ),
             actions: <Widget>[
@@ -239,101 +241,120 @@ class _UserElementScreen extends State<UserElementScreen> {
         home: LoadingScreen(),
       );
     } else {
-      return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _showDialog(context);
-          },
-          child: Icon(Icons.add),
-          backgroundColor: Colors.green,
-        ),
-        appBar: AppBar(
-            title: Text(
-              title,
-              style: Theme.of(context).textTheme.headline5,
-            )
-        ),
-        body: GridView.count(
-
-          padding: const EdgeInsets.only(top: 3),
-          crossAxisCount: 1,
-          mainAxisSpacing: 3,
-          childAspectRatio: 16/4,
-
-          children: [
-            Material(
-              color: Theme.of(context).cardColor,
-              child: InkWell(
-                child: Container(
-                    height: 48.0,
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                this.instructions[0],
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              Text(
-                                this.instructions[1],
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                            ]
-                        ),
-                      ],
-                    )
-                ),
-              ),
+      if (this.user_elements.isEmpty) {
+        return Scaffold(
+            backgroundColor: Theme.of(context).backgroundColor,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                _showDialog(context);
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Colors.green,
             ),
-            for(int i=0; i<this.user_elements.length; i+=2)
-              Material(
-                color: Theme.of(context).cardColor,
-                child: InkWell(
-                  child: Container(
-                      height: 48.0,
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            appBar: AppBar(
+                title: Text(
+                  title,
+                  style: Theme.of(context).textTheme.headline5,
+                )
+            ),
+            body: Center(
+                child: Material(
+                  color: Theme.of(context).backgroundColor,
+                  child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: Theme.of(context).textTheme.headline6,
                         children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  this.user_elements[i],
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                Text(
-                                  this.user_elements[i+1],
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ]
+                          TextSpan(text: "Tap "),
+                          WidgetSpan(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                              child: Icon(Icons.add_circle),
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.delete_forever),
-                                tooltip: 'Delete',
-                                onPressed: () {
-                                  removeElement(this.user_elements[i], this.user_elements[i+1]);
-                                },
-                              ),
-                            ],
+                          TextSpan(text: ' to add a new '+this.instructions[0]+'\n\n'),
+                          TextSpan(text: "Tap "),
+                          WidgetSpan(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                              child: Icon(Icons.delete_forever),
+                            ),
                           ),
+                          TextSpan(text: ' next to a '+this.instructions[0]+' to delete it'),
                         ],
                       )
                   ),
-                ),
+                ))
+        );
+      } else {
+        return Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _showDialog(context);
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Colors.green,
+          ),
+          appBar: AppBar(
+              title: Text(
+                title,
+                style: Theme.of(context).textTheme.headline5,
               )
-          ],
-        ),
-      );
+          ),
+          body: GridView.count(
+
+            padding: const EdgeInsets.only(top: 3),
+            crossAxisCount: 1,
+            mainAxisSpacing: 3,
+            childAspectRatio: 16/4,
+
+            children: [
+              for(int i=0; i<this.user_elements.length; i+=2)
+                Material(
+                  color: Theme.of(context).cardColor,
+                  child: InkWell(
+                    child: Container(
+                        height: 48.0,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    this.user_elements[i],
+                                    style: Theme.of(context).textTheme.headline4,
+                                  ),
+                                  Text(
+                                    this.user_elements[i+1],
+                                    style: Theme.of(context).textTheme.headline6,
+                                  ),
+                                ]
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.delete_forever),
+                                  tooltip: 'Delete',
+                                  onPressed: () {
+                                    removeElement(this.user_elements[i], this.user_elements[i+1]);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                    ),
+                  ),
+                )
+            ],
+          ),
+        );
+      }
     }
   }
 }

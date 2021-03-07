@@ -34,6 +34,8 @@ dependencies:
 
   flutter_midi: ^1.0.2
 
+  introduction_screen: ^1.0.9
+
   path_provider:
 
 dev_dependencies:
