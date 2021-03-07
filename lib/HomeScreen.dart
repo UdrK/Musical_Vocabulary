@@ -206,6 +206,27 @@ class HomeScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
+                  'Quiz',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),
+            ),
+          ),
+
+          Material(
+            color: Theme.of(context).cardColor,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BookmarksScreen()),
+                );
+              },
+              child: Container(
+                height: 48.0,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
                   'Bookmarks',
                   style: Theme.of(context).textTheme.headline6,
                 ),

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'Carousel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'MusicTheory.dart';
 import 'LoadingScreen.dart';
-import 'HomeScreen.dart';
 
 /*
 App entry point, here settings are loaded (a loading screen is eventually shown)
@@ -57,7 +57,6 @@ Future<int> getDefaultSetting(setting) async {
 class MusicalVocabulary extends StatefulWidget {
   @override
   _MusicalVocabulary createState() => _MusicalVocabulary();
-
 }
 
 class _MusicalVocabulary extends State<MusicalVocabulary> {
@@ -88,10 +87,6 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
     font_color = Color(await getDefaultSetting('font_color'));
     font_size = await getDefaultSetting('font_size');
     return true;
-  }
-
-  void setTheme(Color pc, Color cc, Color bc, Color fc, int fs) {
-
   }
 
   @override
@@ -143,7 +138,7 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
             ),
           ),
         ),
-        home: HomeScreen(),
+        home: Carousel(),
       );
     }
   }
