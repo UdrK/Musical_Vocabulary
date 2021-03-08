@@ -53,6 +53,7 @@ class _BookmarksScreen extends State<BookmarksScreen> {
   Widget build(BuildContext context) {
     if (!done) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoadingScreen(),
       );
     } else {

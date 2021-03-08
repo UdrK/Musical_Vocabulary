@@ -1,6 +1,5 @@
 import 'package:flutter_midi/flutter_midi.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'LoadingScreen.dart';
 import 'MusicTheory.dart';
@@ -41,7 +40,6 @@ class _ResultsScreen extends State<ResultsScreen> {
     this.note = note;
   }
 
-  // TODO: MIDI
   void load() async {
     _flutterMidi.unmute();
     await rootBundle.load("assets/soundfonts/Yamaha-Grand-Lite-v2.0.sf2").then((sf2) {
@@ -66,7 +64,7 @@ class _ResultsScreen extends State<ResultsScreen> {
               MusicTheory.scales_map[value[i]] = value[i+1];
             }
           }
-          scales_or_chords = MusicTheory(note).scales();
+          scales_or_chords = MusicTheory.scales(note);
           for(int i=0; i<scales_or_chords.length; i+=1) {
             playing.add(false);
           }
@@ -81,7 +79,7 @@ class _ResultsScreen extends State<ResultsScreen> {
               MusicTheory.chords_map[value[i]] = value[i+1];
             }
           }
-          scales_or_chords = MusicTheory(note).chords();
+          scales_or_chords = MusicTheory.chords(note);
           for(int i=0; i<scales_or_chords.length; i+=1) {
             playing.add(false);
           }
@@ -131,6 +129,7 @@ class _ResultsScreen extends State<ResultsScreen> {
   Widget build(BuildContext context) {
     if (!done) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoadingScreen(),
       );
     } else {

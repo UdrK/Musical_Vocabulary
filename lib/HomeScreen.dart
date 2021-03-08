@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'Carousel.dart';
 import 'NotesScreen.dart';
+import 'QuizScreen.dart';
+import 'QuizSettingsScreen.dart';
 import 'ThemesScreen.dart';
 import 'NotationScreen.dart';
 import 'UserElementScreen.dart';
@@ -100,6 +104,27 @@ class HomeScreen extends StatelessWidget {
               Material(
                 color: Theme.of(context).cardColor,
                 child: InkWell(
+                  onTap:() {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => QuizSettingsScreen()),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "Quiz Settings",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    leading: Icon(
+                      CupertinoIcons.question,
+                      color: Theme.of(context).textTheme.headline6.color,
+                    ),
+                  ),
+                ),
+              ),
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -134,6 +159,27 @@ class HomeScreen extends StatelessWidget {
                     ),
                     leading: Icon(
                       Icons.settings,
+                      color: Theme.of(context).textTheme.headline6.color,
+                    ),
+                  ),
+                ),
+              ),
+              Material(
+                color: Theme.of(context).cardColor,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Carousel()),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "Open Tutorial",
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    leading: Icon(
+                      CupertinoIcons.book,
                       color: Theme.of(context).textTheme.headline6.color,
                     ),
                   ),
@@ -198,7 +244,7 @@ class HomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BookmarksScreen()),
+                  MaterialPageRoute(builder: (context) => QuizScreen()),
                 );
               },
               child: Container(

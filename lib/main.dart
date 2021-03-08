@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'Carousel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'HomeScreen.dart';
 import 'MusicTheory.dart';
 import 'LoadingScreen.dart';
 
@@ -16,10 +17,11 @@ void main() {
 
 void setDefaultSettings() async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.clear(); // TODO: comment this
-  String theme = prefs.getString('default_theme');
+  //await prefs.clear();
+  int theme = prefs.getInt('bpm');
   if (theme == null) {
-    prefs.setString('default_theme', 'dark');
+    print("i do this");
+    prefs.setString('default_theme', 'light');
     prefs.setInt('dark_primary', Colors.blueGrey[700].value);
     prefs.setInt('dark_card', Colors.blueGrey[800].value);
     prefs.setInt('dark_background', Colors.blueGrey[900].value);
@@ -35,11 +37,17 @@ void setDefaultSettings() async {
     prefs.setInt('custom_background', Colors.white.value);
     prefs.setInt('custom_font_color', Colors.black.value);
     prefs.setInt('custom_font_size', 20);
-
     prefs.setString('notation', 'alphabet');
-
     prefs.setString('legatoStaccato', 'staccato');
     prefs.setInt('bpm', 60);
+    prefs.setBool('skip_intro', false);
+    prefs.setBool('scales_q', true);
+    prefs.setBool('chords_q', true);
+    prefs.setBool('sharp_q', true);
+    prefs.setInt('scales_quizzes', 0);
+    prefs.setInt('chords_quizzes', 0);
+    prefs.setInt('correct_scales', 0);
+    prefs.setInt('correct_chords', 0);
   }
 }
 
@@ -66,6 +74,7 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
   static Color background_color;
   static Color font_color;
   static int font_size;
+  bool skip_intro;
   bool done = false;
   String notation;
   String legatoStaccato;
@@ -73,10 +82,14 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
 
   Future<bool> loadSettings() async {
     await setDefaultSettings();
+    final prefs = await SharedPreferences.getInstance();
     await SharedPreferences.getInstance().then((value) { theme = value.getString('default_theme');});
     await SharedPreferences.getInstance().then((value) { notation = value.getString('notation');});
     await SharedPreferences.getInstance().then((value) { legatoStaccato = value.getString('legatoStaccato');});
     await SharedPreferences.getInstance().then((value) { bpm = value.getInt('bpm');});
+    await SharedPreferences.getInstance().then((value) { skip_intro = value.getBool('skip_intro');});
+    await prefs.setBool('skip_intro', true);
+
     MusicTheory.changeNoteRepresentation(notation);
     MusicTheory.changeBpm(bpm);
     MusicTheory.changeLegatoStaccato(legatoStaccato);
@@ -102,6 +115,7 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
   Widget build(BuildContext context) {
     if (done == false) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoadingScreen(),
       );
     }
@@ -138,7 +152,7 @@ class _MusicalVocabulary extends State<MusicalVocabulary> {
             ),
           ),
         ),
-        home: Carousel(),
+        home: (skip_intro) ? HomeScreen() : Carousel(),
       );
     }
   }

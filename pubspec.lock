@@ -131,7 +131,7 @@ packages:
       name: flutter_midi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.1"
   flutter_midi_platform_interface:
     dependency: transitive
     description:
@@ -170,6 +170,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  intro_views_flutter:
+    dependency: "direct main"
+    description:
+      name: intro_views_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.8.2"
   introduction_screen:
     dependency: "direct main"
     description:

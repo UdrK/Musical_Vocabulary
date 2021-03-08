@@ -238,6 +238,7 @@ class _UserElementScreen extends State<UserElementScreen> {
   Widget build(BuildContext context) {
     if (!done) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoadingScreen(),
       );
     } else {

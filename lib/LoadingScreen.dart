@@ -16,7 +16,7 @@ class LoadingScreen extends StatelessWidget {
                 fontSize: 24,
                 fontWeight: FontWeight.w300,
                 fontStyle: FontStyle.italic,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
           ),

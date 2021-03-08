@@ -8,7 +8,6 @@ import 'LoadingScreen.dart';
 This screen lets the user pick a theme and make a custom one
 */
 
-
 class ThemesScreen extends StatefulWidget {
   @override
   _ThemesScreen createState() => _ThemesScreen();
@@ -113,6 +112,7 @@ class _ThemesScreen extends State<ThemesScreen> {
   Widget build(BuildContext context) {
     if (done == false) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoadingScreen(),
       );
     }

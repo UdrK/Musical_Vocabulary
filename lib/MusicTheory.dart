@@ -5,7 +5,6 @@ chords
 import 'dart:math';
 
 class MusicTheory {
-  String note;
 
   static int interval_between_notes;
   static int note_duration;
@@ -38,10 +37,6 @@ class MusicTheory {
     "Pentatonic Blues": "mWHHW",
     "Mixolydian": "WWHWWHW",
   };
-
-  MusicTheory(String note) {
-    this.note = note;
-  }
 
   static void changeBpm(int bpm) {
     interval_between_notes = ((60/bpm)*1000).round();
@@ -83,7 +78,7 @@ class MusicTheory {
     return midiNotes;
   }
 
-  List<String> scales() {
+  static List<String> scales(String note) {
     int start = notes.indexOf(note);
     List<String> scales = List<String>();
 
@@ -95,7 +90,7 @@ class MusicTheory {
     return scales;
   }
 
-  List<String> chords() {
+  static List<String> chords(String note) {
     int start = notes.indexOf(note);
     List<String> chords = List<String>();
 
@@ -108,7 +103,7 @@ class MusicTheory {
   }
 
   // helper method used in __semitonesRuleToNotes
-  int __semitonesRuleToIndex(String rule, int start) {
+  static int __semitonesRuleToIndex(String rule, int start) {
     int semitones;
     // 1 semitone
     if (rule == 'H') {
@@ -171,7 +166,7 @@ class MusicTheory {
 
   }
 
-  String __scaleRuleToNotes(int start, String note, String rule) {
+  static String __scaleRuleToNotes(int start, String note, String rule) {
     String scale = note;
 
     for(int i=0;i<rule.length;i++) {
@@ -183,7 +178,7 @@ class MusicTheory {
     return scale;
   }
 
-  String __chordRuleToNotes(int start, String note, String rule) {
+  static String __chordRuleToNotes(int start, String note, String rule) {
     String scale = note;
     int index;
     for(int i=0;i<rule.length;i++) {
